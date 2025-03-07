@@ -1,0 +1,89 @@
+{% load mathfilters %}
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>GFG</title>
+	<style>
+
+	* {
+		box-sizing: border-box;
+		padding: 0px;
+		margin: 0px;
+		font-family: cursive;
+	}
+	html,
+	body {
+		height: 100%;
+	}
+	body {
+		background-color: #f1f5f8;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.card {
+		background-color: white;
+		padding: 25px;
+		border: 1px solid #bbbbbb;
+		border-radius: 5px;
+		box-shadow: 1px 1px 10px 0px rgb(0 0 0 / 25%);
+	}
+	.title {
+		text-align: center;
+		letter-spacing: 1px;
+	}
+	.muted {
+		color: #8e7f7f;
+		display: block;
+		margin-bottom: 10px;
+		text-align: center;
+	}
+	.btn_container {
+		padding: 20px;
+		text-align: center;
+	}
+	.btn {
+		border-radius: 4px;
+		cursor: pointer;
+		padding: 4px 8px;
+		background-color: #ffaaa7;
+		color: white;
+		font-size: 1.2em;
+		font-weight: 600;
+		letter-spacing: 1px;
+	}
+	</style>
+</head>
+<body>
+
+<form action="{% url 'homepage' %}">
+    {% csrf_token %}
+
+    <h1>Thank You For Visiting</h1>
+
+
+<!-- Razorpay's Javascript code. -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"
+
+     data-key="rzp_test_8ZlQ5ZrMiHMwmU"
+
+	 data-amount="{{payment.amount}}"
+
+	 data-currency="INR"
+	 data-order_id="{{payment.id}}"
+	 data-buttontext="Pay with Razorpay"
+	 data-name="Bakes"
+	 data-description=""
+     data-redirect="true"
+	 data-image="https://example.com/bakerylogo.jpg"
+	 data-prefill.name="{{request.session.UserName}}"
+	 data-theme.color="#F37254"
+
+
+
+></script>
+	</form>
+</body>
+</html>

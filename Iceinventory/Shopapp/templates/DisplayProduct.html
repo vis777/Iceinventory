@@ -1,0 +1,84 @@
+{% extends 'index.html' %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product List</title>
+</head>
+<body>
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Product Details</h4>
+
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="table-responsive pt-6">
+                        <table class="table table-striped project-orders-table">
+                            <thead>
+                                <tr>
+                                    <th>Product Image</th>
+                                    <th>Product Name</th>
+                                    <th>Category</th>
+                                    <th>Description</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for product in prod %}
+                                <tr>
+                                    <td>
+                                        {% if product.product_image %}
+                                            <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}" width="50" height="50">
+                                        {% else %}
+                                            No Image
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ product.product_name }}</td>
+                                    <td>{{ product.product_category.category_name }}</td>
+                                    <td>{{ product.description }}</td>
+                                    <td>{{ product.product_price }}</td>
+                                    <td>
+                                        {% if product.status == 'active' %}
+                                            <span class="badge badge-success">Active</span>
+                                        {% else %}
+                                            <span class="badge badge-danger">Inactive</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <form action="{% url 'editproduct' dataid=product.id %}" method="get">
+                                                <button type="submit" class="btn btn-success btn-sm btn-icon-text mr-3">
+                                                    Edit
+                                                    <i class="typcn typcn-edit btn-icon-append"></i>
+                                                </button>
+                                            </form>
+                                            <form action="{% url 'deleteproduct' dataid=product.id %}" method="post">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-danger btn-sm btn-icon-text" onclick="return confirm('Are you sure you want to delete this product?');">
+                                                    Delete
+                                                    <i class="typcn typcn-delete-outline btn-icon-append"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="7" class="text-center">No products available.</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
+{% endblock %}

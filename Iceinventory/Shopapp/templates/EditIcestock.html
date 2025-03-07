@@ -1,0 +1,44 @@
+{% extends 'index.html' %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Ice Stock</title>
+</head>
+<body>
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Edit Ice Stock</h4>
+            <form class="forms-sample" method="post" action="{% url 'update_icestock' dataid=stock.id %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="ice_type">Ice Type (Product)</label>
+                    <select class="form-control" id="ice_type" name="ice_type" required>
+                        <option value="{{ stock.ice_type.id }}" selected>{{ stock.ice_type.product_name }}</option>
+                        {% for product in products %}
+                        <option value="{{ product.id }}">{{ product.product_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity (kg)</label>
+                    <input type="number" step="0.01" class="form-control" id="quantity" name="quantity_kg" value="{{ stock.quantity_kg }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="reorderPoint">Reorder Point (kg)</label>
+                    <input type="number" step="0.01" class="form-control" id="reorderPoint" name="reorder_point" value="{{ stock.reorder_point }}" required>
+                </div>
+                <div class="form-group">
+                    <label>Last Updated:</label>
+                    <p>{{ stock.last_updated|date:"Y-m-d H:i" }}</p>
+                </div>
+                <button type="submit" class="btn btn-primary mr-2">Update Ice Stock</button>
+                <a href="{% url 'icestock_display' %}" class="btn btn-light">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+{% endblock %}

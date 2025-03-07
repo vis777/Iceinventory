@@ -1,0 +1,410 @@
+
+{% load static %}
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+		<title>iCREAM</title>
+
+ 		<!-- Google font -->
+ 		<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
+
+ 		<!-- Bootstrap -->
+ 		<link type="text/css" rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}"/>
+
+ 		<!-- Slick -->
+ 		<link type="text/css" rel="stylesheet" href="{% static 'assets/css/slick.css' %}"/>
+ 		<link type="text/css" rel="stylesheet" href="{% static 'assets/css/slick-theme.css' %}"/>
+
+ 		<!-- nouislider -->
+ 		<link type="text/css" rel="stylesheet" href="{% static 'assets/css/nouislider.min.css' %}"/>
+
+ 		<!-- Font Awesome Icon -->
+ 		<link rel="stylesheet" href="{% static 'assets/css/font-awesome.min.css' %}">
+
+ 		<!-- Custom stlylesheet -->
+ 		<link type="text/css" rel="stylesheet" href="{% static 'assets/css/style.css' %}"/>
+
+ 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+ 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+ 		<!--[if lt IE 9]>
+ 		  <script src="{% static 'assets/https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js' }%"></script>
+ 		  <script src="{% static 'assets/https://oss.maxcdn.com/respond/1.4.2/respond.min.js' %}"></script>
+ 		<![endif]-->
+
+    </head>
+	<body>
+		<!-- HEADER -->
+		<header>
+			<!-- TOP HEADER -->
+			<div id="top-header">
+				<div class="container">
+					<ul class="header-links pull-left">
+						<li><a href="#"><i class="fa fa-phone"></i> +021-95-51-84</a></li>
+						<li><a href="#"><i class="fa fa-envelope-o"></i> Iceinventory@email.com</a></li>
+						<li><a href="#"><i class="fa fa-map-marker"></i> 1734 Stonecoal Road</a></li>
+					</ul>
+					<ul class="header-links pull-right">
+						{% if user.username %}
+						<li><a href="{% url 'user_logout' %}"><i class="fa fa-user-o"></i> Welcome {{user.username}} / Logout</a></li>
+						{% else %}
+						<li><a href="#"><i class="fa fa-user-o"></i> Register or Login</a></li>
+						{% endif %}
+					</ul>
+
+				</div>
+			</div>
+			<!-- /TOP HEADER -->
+
+			<!-- MAIN HEADER -->
+			<div id="header">
+				<!-- container -->
+				<div class="container">
+					<!-- row -->
+					<div class="row">
+						<!-- LOGO -->
+						<div class="col-md-3">
+							<div class="header-logo">
+								<a href="#" class="logo">
+									<img src="{% static 'assets/img/IceLogo.png' %}" alt="" height="100px">
+								</a>
+							</div>
+						</div>
+						<!-- /LOGO -->
+
+						<!-- SEARCH BAR -->
+						<div class="col-md-6">
+							<div class="header-search">
+								<form>
+									{% comment %} <select class="input-select">
+										<option value="0">All Categories</option>
+										{% for d in cat %}
+										<option value="1">{{d.Category_Name}}</option>
+										{% endfor %}
+									</select>
+									<input class="input" placeholder="Search here">
+									<button class="search-btn">Search</button> {% endcomment %}
+								</form>
+							</div>
+						</div>
+						<!-- /SEARCH BAR -->
+
+						<!-- ACCOUNT -->
+						<div class="col-md-3 clearfix">
+							<div class="header-ctn">
+								<!-- Wishlist -->
+								<!--<div>-->
+									<!--<a href="#">-->
+										<!--<i class="fa fa-heart-o"></i>-->
+										<!--<span>Your Wishlist</span>-->
+										<!--<div class="qty"></div>-->
+									<!--</a>-->
+								<!--</div>-->
+								<!-- /Wishlist -->
+
+								<!-- Cart -->
+								<div class="dropdown">
+									<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+										<i class="fa fa-shopping-cart"></i>
+										<a href="{% url 'cartpage' %}"><span>Your Cart</span></a>
+										<!--<div class="qty"></div>-->
+									</a>
+									<!--<div class="cart-dropdown">-->
+										<!--<div class="cart-list">-->
+											<!--<div class="product-widget">-->
+												<!--<div class="product-img">-->
+													<!--<img src="./img/product01.png" alt="">-->
+												<!--</div>-->
+												<!--<div class="product-body">-->
+													<!--<h3 class="product-name"><a href="#">product name goes here</a></h3>-->
+													<!--<h4 class="product-price"><span class="qty">1x</span>$980.00</h4>-->
+												<!--</div>-->
+												<!--<button class="delete"><i class="fa fa-close"></i></button>-->
+											<!--</div>-->
+
+											<!--<div class="product-widget">-->
+												<!--<div class="product-img">-->
+													<!--<img src="./img/product02.png" alt="">-->
+												<!--</div>-->
+												<!--<div class="product-body">-->
+													<!--<h3 class="product-name"><a href="#">product name goes here</a></h3>-->
+													<!--<h4 class="product-price"><span class="qty">3x</span>$980.00</h4>-->
+												<!--</div>-->
+												<!--<button class="delete"><i class="fa fa-close"></i></button>-->
+											<!--</div>-->
+										<!--</div>-->
+										<!--<div class="cart-summary">-->
+											<!--<small>3 Item(s) selected</small>-->
+											<!--<h5>SUBTOTAL: $2940.00</h5>-->
+										<!--</div>-->
+										<!--<div class="cart-btns">-->
+											<!--<a href="#">View Cart</a>-->
+											<!--<a href="#">Checkout  <i class="fa fa-arrow-circle-right"></i></a>-->
+										<!--</div>-->
+									<!--</div>-->
+								</div>
+								<!-- /Cart -->
+
+								<!-- Menu Toogle -->
+								<div class="menu-toggle">
+									<a href="#">
+										<i class="fa fa-bars"></i>
+										<span>Menu</span>
+									</a>
+								</div>
+								<!-- /Menu Toogle -->
+							</div>
+						</div>
+						<!-- /ACCOUNT -->
+					</div>
+					<!-- row -->
+				</div>
+				<!-- container -->
+			</div>
+			<!-- /MAIN HEADER -->
+		</header>
+		<!-- /HEADER -->
+
+		<!-- NAVIGATION -->
+		<nav id="navigation">
+			<!-- container -->
+			<div class="container">
+				<!-- responsive-nav -->
+				<div id="responsive-nav">
+					<!-- NAV -->
+					<ul class="main-nav nav navbar-nav">
+						<li><a href="{% url 'homepage' %}">Home</a></li>
+						<li><a href="{% url 'productspage' %}">Products</a></li>
+						<li><a href="{% url 'aboutpage' %}">About</a></li>
+						<li class="active"><a href="{% url 'servicepage' %}">Services</a></li>
+						<li><a href="{% url 'contactpage' %}">Contact</a></li>
+						<!--<li><a href="#">Cameras</a></li>-->
+						<!--<li><a href="#">Accessories</a></li>-->
+					</ul>
+					<!-- /NAV -->
+				</div>
+				<!-- /responsive-nav -->
+			</div>
+			<!-- /container -->
+		</nav>
+		<!-- /NAVIGATION -->
+
+		<!-- BREADCRUMB -->
+		<!--<div id="breadcrumb" class="section">-->
+			<!--&lt;!&ndash; container &ndash;&gt;-->
+			<!--<div class="container">-->
+				<!--&lt;!&ndash; row &ndash;&gt;-->
+				<!--<div class="row">-->
+					<!--<div class="col-md-12">-->
+						<!--<h3 class="breadcrumb-header">Regular Page</h3>-->
+						<!--<ul class="breadcrumb-tree">-->
+							<!--<li><a href="#">Home</a></li>-->
+							<!--<li class="active">Blank</li>-->
+						<!--</ul>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--&lt;!&ndash; /row &ndash;&gt;-->
+			<!--</div>-->
+			<!--&lt;!&ndash; /container &ndash;&gt;-->
+		<!--</div>-->
+		<!-- /BREADCRUMB -->
+
+		<!-- SECTION -->
+		<div class="section">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+					<div class="detailedlist-container container">
+
+            <div class="detailedlist-item">
+                <div class="row align-items-center">
+                    <div class="col-md-7  order-2">
+                        <div class="detailedlist-item-text">
+                            <h2 class="detailedlist-item-title" title="Fresh Cupcakes - Julia's Sweets &amp; Treats in Sioux Falls, SD 57106"><div>Fresh Cupcakes</div>
+</h2>
+                            <div class="detailedlist-item-desc">
+                                <div>Indulge in the *purest, creamiest, and most refreshing ice cream experience! Made with **premium ingredients, our ice creams are crafted to perfection, ensuring a **rich, velvety texture* and *burst of flavor* in every scoop. From *classic favorites* to *exciting new creations*, we bring you the perfect balance of taste and freshness. Whether you're cooling off on a hot day or satisfying your sweet cravings, our ice cream is a treat you’ll love.</div>
+								<br>
+								<div>*Enjoy the taste of freshness in every bite!* ❄️✨</div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5  order-1">
+                        <div class="detailedlist-img">
+                            <div class="lazy-image d-block loaded">
+                                <img src="{% static 'assets/img/FreshIcecream.jpg' %}" class="img-fluid mb-3 w-100" alt="Fresh Cupcakes" height="250px">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="detailedlist-item">
+                <div class="row align-items-center">
+                    <div class="col-md-7 order-md-1 order-2">
+                        <div class="detailedlist-item-text">
+                            <h2 class="detailedlist-item-title" title="Special Occasions - Julia's Sweets &amp; Treats in Sioux Falls, SD 57106"><div>Special Occasions</div>
+</h2>
+                            <div class="detailedlist-item-desc">
+                                <p>Celebrate life’s sweetest moments with our special occasion ice cream! Whether it’s a birthday, wedding, anniversary, or festive gathering, our handcrafted ice creams add a touch of joy to every event. Made with premium ingredients and available in a variety of delicious flavors, our ice creams are perfect for making your celebrations extra special.</p>
+								<br>
+								<p>From customized flavors to exclusive party packs, we bring you the ultimate treat to share with loved ones. Indulge, celebrate, and create unforgettable memories—one scoop at a time! 🎂✨</p>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5 order-md-2 order-1">
+                        <div class="detailedlist-img">
+                            <div class="lazy-image d-block loaded">
+                                <img src="{% static 'assets/img/special occasion.jpg' %}" class="img-fluid mb-3 w-100" alt="Special Occasions" height="250px">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="detailedlist-item">
+                <div class="row align-items-center">
+                    <div class="col-md-7  order-2">
+                        <div class="detailedlist-item-text">
+                            <h2 class="detailedlist-item-title" title="Happy Hour - Julia's Sweets &amp; Treats in Sioux Falls, SD 57106"><div>Happy Hour</div>
+</h2>
+                            <div class="detailedlist-item-desc">
+                                <div>Make every hour a happy hour with our irresistible ice creams! Enjoy exclusive discounts, exciting flavors, and special offers during our Happy Hour—the perfect time to treat yourself to something sweet. Whether you’re craving a classic scoop or trying a new flavor, our creamy, refreshing ice creams will lift your mood and keep you cool.</div>
+								<br>
+								<div>Grab your favorite scoop, share the joy, and make every moment delicious! 🍨✨</div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5  order-1">
+                        <div class="detailedlist-img">
+                            <div class="lazy-image d-block loaded">
+                                <img src="{% static 'assets/img/Happyhour.png' %}" class="img-fluid mb-3 w-100" alt="Happy Hour" height="250px" width="375px">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /SECTION -->
+
+		<!-- /NEWSLETTER -->
+
+		<!-- FOOTER -->
+		<footer id="footer">
+			<!-- top footer -->
+			<div class="section">
+				<!-- container -->
+				<div class="container">
+					<!-- row -->
+					<div class="row">
+						<div class="col-md-3 col-xs-6">
+							<div class="footer">
+								<h3 class="footer-title">About Us</h3>
+								<p>iCREAM We provide premium-quality crushed ice, perfect for refreshing drinks, desserts, and all your cooling needs.</p>
+								<ul class="footer-links">
+									<li><a href="#"><i class="fa fa-map-marker"></i>1734 Stonecoal Road</a></li>
+									<li><a href="#"><i class="fa fa-phone"></i>+021-95-51-84</a></li>
+									<li><a href="#"><i class="fa fa-envelope-o"></i>iceinventory@email.com</a></li>
+								</ul>
+							</div>
+						</div>
+
+						<div class="col-md-3 col-xs-6">
+							<div class="footer">
+								<h3 class="footer-title">Categories</h3>
+								<ul class="footer-links">
+									<li><a href="#">Ice</a></li>
+									<li><a href="#">Ice Cubes</a></li>
+									<li><a href="#">Crushed Ice</a></li>
+									<li><a href="#">Icecream</a></li>
+									<li><a href="#">Icepacks</a></li>
+								</ul>
+							</div>
+						</div>
+
+						<div class="clearfix visible-xs"></div>
+
+						<div class="col-md-3 col-xs-6">
+							<div class="footer">
+								<h3 class="footer-title">Information</h3>
+								<ul class="footer-links">
+									<li><a href="#">About Us</a></li>
+									<li><a href="#">Contact Us</a></li>
+									<li><a href="#">Privacy Policy</a></li>
+									<li><a href="#">Orders and Returns</a></li>
+									<li><a href="#">Terms & Conditions</a></li>
+								</ul>
+							</div>
+						</div>
+
+						<div class="col-md-3 col-xs-6">
+							<div class="footer">
+								<h3 class="footer-title">Service</h3>
+								<ul class="footer-links">
+									<li><a href="#">My Account</a></li>
+									<li><a href="#">View Cart</a></li>
+									<li><a href="#">Wishlist</a></li>
+									<li><a href="#">Track My Order</a></li>
+									<li><a href="#">Help</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /row -->
+				</div>
+				<!-- /container -->
+			</div>
+			<!-- /top footer -->
+
+			<!-- bottom footer -->
+			<div id="bottom-footer" class="section">
+				<div class="container">
+					<!-- row -->
+					<div class="row">
+						<div class="col-md-12 text-center">
+							<ul class="footer-payments">
+								<li><a href="#"><i class="fa fa-cc-visa"></i></a></li>
+								<li><a href="#"><i class="fa fa-credit-card"></i></a></li>
+								<li><a href="#"><i class="fa fa-cc-paypal"></i></a></li>
+								<li><a href="#"><i class="fa fa-cc-mastercard"></i></a></li>
+								<li><a href="#"><i class="fa fa-cc-discover"></i></a></li>
+								<li><a href="#"><i class="fa fa-cc-amex"></i></a></li>
+							</ul>
+							<span class="copyright">
+								<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+								Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+							<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+							</span>
+
+
+						</div>
+					</div>
+						<!-- /row -->
+				</div>
+				<!-- /container -->
+			</div>
+			<!-- /bottom footer -->
+		</footer>
+		<!-- /FOOTER -->
+
+		<!-- jQuery Plugins -->
+		<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+		<script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+		<script src="{% static 'assets/js/slick.min.js' %}"></script>
+		<script src="{% static 'assets/js/nouislider.min.js' %}"></script>
+		<script src="{% static 'assets/js/jquery.zoom.min.js' %}"></script>
+		<script src="{% static 'assets/js/main.js' %}"></script>
+
+	</body>
+</html>
+

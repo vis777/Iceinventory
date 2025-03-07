@@ -1,0 +1,53 @@
+{% extends 'index.html' %}
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Category List</h4>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Image</th>
+                    <th>Created At</th>
+                    <th>Updated At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cat in categories %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ cat.category_name }}</td>
+                    <td>{{ cat.description }}</td>
+                    <td>{{ cat.status }}</td>
+                    <td>
+                        {% if cat.category_image %}
+                            <img src="{{ cat.category_image.url }}" width="80px" height="80px">
+                        {% else %}
+                            No Image
+                        {% endif %}
+                    </td>
+                    <td>{{ cat.created_at|date:"Y-m-d H:i" }}</td>
+                    <td>{{ cat.updated_at|date:"Y-m-d H:i" }}</td>
+                    <td>
+                        <a href="{% url 'editcategory' cat.id %}" class="btn btn-info btn-sm">Edit</a>
+                        <form method="POST" action="{% url 'deletecategory' cat.id %}" style="display:inline;">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                      </form>
+                      
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center">No categories found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

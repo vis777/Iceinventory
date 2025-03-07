@@ -1,0 +1,56 @@
+{% extends 'index.html' %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Product details</h4>
+
+            <div class="col-md-10">
+              <div class="card">
+                <div class="table-responsive pt-6">
+                  <table class="table table-striped project-orders-table">
+                    <thead>
+                      <tr>
+                        <th>Contact Name</th>
+                        <th>Contact Email</th>
+                        <th>Subject</th>
+                        <th>Message</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for d in con %}
+                      <tr>
+                        <td>{{d.Contact_Name}}</td>
+                        <td>{{d.Contact_Email}}</td>
+                        <td>{{d.Subject}}</td>
+                        <td>{{d.Message}}</td>
+
+                        <td>
+                          <div class="d-flex align-items-center" >
+                              <form action="{% url 'deletecontact' dataid=d.id %}">
+                            <button type="submit" class="btn btn-danger btn-sm btn-icon-text">
+                              Delete
+                              <i class="typcn typcn-delete-outline btn-icon-append"></i>
+                            </button>
+                              </form>
+                          </div>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+                </div>
+              </div>
+</div>
+</body>
+</html>
+{% endblock %}
