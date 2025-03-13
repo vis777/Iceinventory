@@ -54,7 +54,6 @@
 						<li><a href="#"><i class="fa fa-user-o"></i> Register or Login</a></li>
 						{% endif %}
 					</ul>
-
 				</div>
 			</div>
 			<!-- /TOP HEADER -->
@@ -210,192 +209,123 @@
 				<!--&lt;!&ndash; /row &ndash;&gt;-->
 			<!--</div>-->
 			<!--&lt;!&ndash; /container &ndash;&gt;-->
-		<!--</div>-->
-		<!-- /BREADCRUMB -->
+		
+		
+	<!-- SECTION -->
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <!-- Product main image -->
+            <div class="col-md-5 col-md-push-2">
+                <div id="product-main-img">
+                    <div class="product-preview">
+                        <img src="{{ data.product_image.url }}" alt="{{ data.product_name }}">
+                    </div>
+                </div>
+            </div>
+            <!-- /Product main image -->
 
-		<!-- SECTION -->
-		<div class="section">
-			<!-- container -->
-			<div class="container">
-				<!-- row -->
-				<div class="row">
-					<!-- Product main img -->
-					<div class="col-md-5 col-md-push-2">
-						<div id="product-main-img">
-							<!--<div class="product-preview">-->
-								<!--<img src="{% static 'img/product01.png' %}" alt="">-->
-							<!--</div>-->
+            <!-- Product thumbnail images -->
+            <div class="col-md-2 col-md-pull-5">
+                <div id="product-imgs"></div>
+            </div>
+            <!-- /Product thumbnail images -->
 
-							<!--<div class="product-preview">-->
-								<!--<img src="{% static 'img/product03.png' %}" alt="">-->
-							<!--</div>-->
-
-							<!--<div class="product-preview">-->
-								<!--<img src="{% static 'img/product06.png' %}" alt="">-->
-							<!--</div>-->
-
-							<div class="product-preview">
-								<img src="{{data.product_image.url}}" alt="">
-							</div>
-						</div>
-					</div>
-					<!-- /Product main img -->
-
-					<!-- Product thumb imgs -->
-					<div class="col-md-2  col-md-pull-5">
-						<div id="product-imgs">
-							<!--<div class="product-preview">-->
-								<!--<img src="{% static 'img/product01.png' %}" alt="">-->
-							<!--</div>-->
-
-							<!--<div class="product-preview">-->
-								<!--<img src="{% static 'img/product03.png' %}" alt="">-->
-							<!--</div>-->
-
-							<!--<div class="product-preview">-->
-								<!--<img src="{% static 'img/product06.png' %}" alt="">-->
-							<!--</div>-->
-
-							<!--<div class="product-preview">-->
-								<!--<img src="{% static 'img/product08.png' %}" alt="">-->
-							<!--</div>-->
-						</div>
-					</div>
-					<!-- /Product thumb imgs -->
-
-					<!-- Product details -->
-					<div class="col-md-5">
-
-						<div class="product-details">
-							<form method="post" action="{% url 'savecart' %}" enctype="multipart/form-data">
-								{% csrf_token %}
-							<h2 class="product-name">{{data.product_name}}</h2>
-							<div>
-								<div class="product-rating">
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star-o"></i>
-								</div>
-								<!--<a class="review-link" href="#">10 Review(s) | Add your review</a>-->
-							</div>
-							<div>
-								<h3 class="product-price">Rs. {{data.product_price}}</h3>
-								<!--<del class="product-old-price">$990.00</del>-->
-								<!--<span class="product-available">In Stock</span>-->
-							</div>
-							<p>{{data.description}}</p>
-
-							<!--<div class="product-options">-->
-								<!--<label>-->
-									<!--Size-->
-									<!--<select class="input-select">-->
-										<!--<option value="0">X</option>-->
-									<!--</select>-->
-								<!--</label>-->
-								<!--<label>-->
-									<!--Color-->
-									<!--<select class="input-select">-->
-										<!--<option value="0">Red</option>-->
-									<!--</select>-->
-								<!--</label>-->
-							<!--</div>-->
-							<div class="add-to-cart">
-								<div class="qty-label">
-									<span>Qty</span>
-							
-									{% if data.stock %}
-										{% if data.stock.quantity_kg > 0 %}
-											<p>Available Stock: {{ data.stock.quantity_kg }} kg</p>
-											<div class="form-group">
-												<input class="input" type="number" name="quantity" min="1" max="{{ data.stock.quantity_kg }}" placeholder="Select Quantity" id="quantity">
-												<input class="input" type="hidden" name="price" value="{{ data.product_price }}" id="price">
-												<input class="input" type="hidden" name="username" value="{{ user.username }}">
-												<input class="input" type="hidden" name="productname" value="{{ data.product_name }}" id="productname">
-												<input class="input" type="hidden" name="description" value="{{ data.description }}" id="description">
-											</div>
-											<div class="form-group">
-												<input class="input" type="text" name="total" placeholder="Total Price" id="totalprice">
-											</div>
-										{% else %}
-											<p class="text-danger">Stock Completed</p>
-										{% endif %}
-									{% else %}
-										<p class="text-danger">Stock Not Available</p>
-									{% endif %}
-								</div>
-							
-								{% if data.stock and data.stock.quantity_kg > 0 %}
-									<button class="add-to-cart-btn" type="button"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
+            <!-- Product details -->
+            <div class="col-md-5">
+                <div class="product-details">
+                    <form method="post" action="{% url 'savecart' %}">
+						{% csrf_token %}
+						<h2 class="product-name">{{ data.product_name }}</h2>
+						<h3 class="product-price">Rs. {{ data.product_price }}</h3>
+						<p>{{ data.description }}</p>
+					
+						<div class="add-to-cart">
+							<div class="qty-label">
+								<span>Qty</span>
+								{% if data.stock > 0 %}
+									<p>Available Stock: <span>{{ data.stock }}</span> units</p>
+									<div class="form-group">
+										<input class="input" type="number" name="quantity" min="1" max="{{ data.stock }}" required>
+										<input type="hidden" name="price" value="{{ data.product_price }}">
+										<input type="hidden" name="username" value="{{ user.username }}">
+										<input type="hidden" name="productname" value="{{ data.product_name }}">
+										<input type="hidden" name="description" value="{{ data.description }}">
+									</div>
 								{% else %}
-									<button class="add-to-cart-btn" type="button" disabled style="background-color: grey; cursor: not-allowed;">
-										<i class="fa fa-shopping-cart"></i> {% if data.stock %}Out of Stock{% else %}No Stock Added{% endif %}
-									</button>
+									<p class="text-danger">Stock Not Available</p>
 								{% endif %}
 							</div>
-							
-							
-							
-							<style>
-							.add-to-cart {
-								display: flex;
-								align-items: flex-start;
-								gap: 15px;
-							}
-							
-							.add-to-cart-btn {
-								padding: 10px 20px;
-								background-color: #f76c6c;
-								color: #fff;
-								border: none;
-								cursor: pointer;
-								transition: transform 0.2s ease, box-shadow 0.2s ease;
-							}
-							
-							.add-to-cart-btn:focus {
-								outline: none;
-								transform: scale(1);
-								box-shadow: none;
-							}
-							</style>
-							
-
-							<!--<ul class="product-btns">-->
-								<!--<li><a href="#"><i class="fa fa-heart-o"></i> add to wishlist</a></li>-->
-								<!--<li><a href="#"><i class="fa fa-exchange"></i> add to compare</a></li>-->
-							<!--</ul>-->
-
-							<!--<ul class="product-links">-->
-								<!--<li>Category:</li>-->
-								<!--<li><a href="#">Headphones</a></li>-->
-								<!--<li><a href="#">Accessories</a></li>-->
-							<!--</ul>-->
-
-							<ul class="product-links">
-								<li>Share:</li>
-								<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-								<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-								<li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-								<li><a href="#"><i class="fa fa-envelope"></i></a></li>
-							</ul>
-
+					
+							{% if data.stock > 0 %}
+								<button class="add-to-cart-btn" type="submit">
+									<i class="fa fa-shopping-cart"></i> Add to Cart
+								</button>
+							{% else %}
+								<button class="add-to-cart-btn" type="button" disabled style="background-color: grey; cursor: not-allowed;">
+									<i class="fa fa-shopping-cart"></i> Out of Stock
+								</button>
+							{% endif %}
 						</div>
-					</div>
+					</form>
+					
+                </div>
+            </div>
+            <!-- /Product details -->
+        </div>
+    </div>
+</div>
+
+{% comment %} <script>
+    // Update total price when quantity changes
+    document.getElementById("quantity").addEventListener("input", function () {
+        let quantity = parseInt(this.value);
+        let price = parseFloat(document.getElementById("price").value);
+        if (!isNaN(quantity) && quantity > 0) {
+            document.getElementById("totalprice").value = (quantity * price).toFixed(2);
+        } else {
+            document.getElementById("totalprice").value = "";
+        }
+    });
+
+    // Add to cart functionality
+    document.getElementById("add-to-cart").addEventListener("click", function () {
+        let quantity = parseInt(document.getElementById("quantity").value);
+        let availableStock = parseInt(document.getElementById("available-stock").innerText);
+
+        if (quantity > availableStock || quantity <= 0) {
+            alert("Invalid quantity selected!");
+            return;
+        }
+
+        // Reduce stock via the reduce_stock API
+        fetch("{% url 'reduce_stock' data.id %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ quantity: quantity })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "success") {
+                document.getElementById("available-stock").innerText = availableStock - quantity;
+                alert("Product added to cart!");
+            } else {
+                alert("Stock update failed!");
+            }
+        });
+    });
+</script> {% endcomment %}
+
+		
 					<!-- /Product details -->
 
 					<!-- Product tab -->
 					<div class="col-md-12">
 						<div id="product-tab">
-							<!-- product tab nav -->
-							<!--<ul class="tab-nav">-->
-								<!--<li class="active"><a data-toggle="tab" href="#tab1">Description</a></li>-->
-								<!--<li><a data-toggle="tab" href="#tab2">Details</a></li>-->
-								<!--<li><a data-toggle="tab" href="#tab3">Reviews</a></li>-->
-							<!--</ul>-->
-							<!-- /product tab nav -->
-
-							<!-- product tab content -->
+							
 							<div class="tab-content">
 								<!-- tab1  -->
 								<!--<div id="tab1" class="tab-pane fade in active">-->

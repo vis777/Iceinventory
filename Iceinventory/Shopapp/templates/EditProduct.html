@@ -1,4 +1,4 @@
-{% extends 'index.html' %}
+{% extends 'adminindex.html' %}
 {% block content %}
 <html lang="en">
 <head>
@@ -33,6 +33,10 @@
                       <div class="form-group">
                       <label for="exampleInputPrice">Price</label>
                       <input type="text" class="form-control" id="exampleInputPrice" placeholder="Price" name="price" value="{{prods.product_price}}">
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputStock">Stock</label>
+                      <input type="text" class="form-control" id="exampleInputStock" placeholder="Stock" name="stock" value="{{prods.stock}}">
                     </div>
                     <div class="form-group">
                       <label for="statusSelect">Status</label>

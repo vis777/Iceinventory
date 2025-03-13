@@ -1,0 +1,19 @@
+{% comment %} <!DOCTYPE html> {% endcomment %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful</title>
+</head>
+<body>
+
+<div class="container">
+    <h2>Payment Successful!</h2>
+    <p>Order ID: {{ order.id }}</p>
+    <p>Payment Method: {{ order.payment_method }}</p>
+    <p>Your order has been placed successfully.</p>
+    <a href="{% url 'homepage' %}">Go to Home</a>
+</div>
+
+</body>
+</html>

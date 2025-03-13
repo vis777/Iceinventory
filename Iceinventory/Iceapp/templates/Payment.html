@@ -1,89 +1,91 @@
 {% load mathfilters %}
 <html lang="en">
 <head>
-	<meta charset="UTF-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>GFG</title>
-	<style>
-
-	* {
-		box-sizing: border-box;
-		padding: 0px;
-		margin: 0px;
-		font-family: cursive;
-	}
-	html,
-	body {
-		height: 100%;
-	}
-	body {
-		background-color: #f1f5f8;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-	.card {
-		background-color: white;
-		padding: 25px;
-		border: 1px solid #bbbbbb;
-		border-radius: 5px;
-		box-shadow: 1px 1px 10px 0px rgb(0 0 0 / 25%);
-	}
-	.title {
-		text-align: center;
-		letter-spacing: 1px;
-	}
-	.muted {
-		color: #8e7f7f;
-		display: block;
-		margin-bottom: 10px;
-		text-align: center;
-	}
-	.btn_container {
-		padding: 20px;
-		text-align: center;
-	}
-	.btn {
-		border-radius: 4px;
-		cursor: pointer;
-		padding: 4px 8px;
-		background-color: #ffaaa7;
-		color: white;
-		font-size: 1.2em;
-		font-weight: 600;
-		letter-spacing: 1px;
-	}
-	</style>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment | iCREAM</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+            font-family: cursive;
+        }
+        html, body {
+            height: 100%;
+        }
+        body {
+            background-color: #f1f5f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card {
+            background-color: white;
+            padding: 25px;
+            border: 1px solid #bbbbbb;
+            border-radius: 5px;
+            box-shadow: 1px 1px 10px 0px rgba(0, 0, 0, 0.25);
+            text-align: center;
+        }
+        .title {
+            text-align: center;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+        .btn {
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 10px 20px;
+            background-color: #ffaaa7;
+            color: white;
+            font-size: 1.2em;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border: none;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
+    <div class="card">
+        <h1 class="title">Thank You For Visiting</h1>
+        <p class="muted">Complete your payment to proceed.</p>
+        
+        <button id="rzp-button1" class="btn">Pay with Razorpay</button>
+    </div>
 
-<form action="{% url 'homepage' %}">
-    {% csrf_token %}
+    <!-- Razorpay Payment Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        var options = {
+            "key": "rzp_test_8ZlQ5ZrMiHMwmU", // Replace with your Razorpay Key
+            "amount": "{{ payment.amount|mul:100 }}", // Amount in paisa (e.g., 50000 for ₹500)
+            "currency": "INR",
+            "name": "iCREAM",
+            "description": "Order Payment",
+            "image": "https://example.com/IceLogo.png",
+            "order_id": "{{ payment.id }}",
+            "prefill": {
+                "name": "{{ user.username }}"
+            },
+            "theme": {
+                "color": "#F37254"
+            },
+            "handler": function (response) {
+    var successUrl = "/Iceapp/payment_success/?payment_id=" + response.razorpay_payment_id;
+    window.location.href = successUrl;
+}
 
-    <h1>Thank You For Visiting</h1>
-
-
-<!-- Razorpay's Javascript code. -->
-<script src="https://checkout.razorpay.com/v1/checkout.js"
-
-     data-key="rzp_test_8ZlQ5ZrMiHMwmU"
-
-	 data-amount="{{payment.amount}}"
-
-	 data-currency="INR"
-	 data-order_id="{{payment.id}}"
-	 data-buttontext="Pay with Razorpay"
-	 data-name="Bakes"
-	 data-description=""
-     data-redirect="true"
-	 data-image="https://example.com/bakerylogo.jpg"
-	 data-prefill.name="{{request.session.UserName}}"
-	 data-theme.color="#F37254"
-
-
-
-></script>
-	</form>
+        };
+        
+        var rzp1 = new Razorpay(options);
+        document.getElementById('rzp-button1').onclick = function (e) {
+            rzp1.open();
+            e.preventDefault();
+        };
+    </script>
 </body>
 </html>
+

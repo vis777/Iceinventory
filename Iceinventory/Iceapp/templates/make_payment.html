@@ -1,0 +1,34 @@
+{% load static %}
+{% comment %} <!DOCTYPE html> {% endcomment %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make a Payment</title>
+    <link type="text/css" rel="stylesheet" href="{% static 'assets/css/style.css' %}"/>
+</head>
+<body>
+
+<div class="container">
+    <h2>Make a Payment</h2>
+    <p>Order ID: {{ order.id }}</p>
+    <p>Customer: {{ order.customer.name }}</p>
+    <p>Product: {{ order.stock.name }}</p>
+    <p>Quantity: {{ order.quantity_ordered }}</p>
+
+    <form action="{% url 'confirm_payment' order.id %}" method="POST">
+        {% csrf_token %}
+        <label for="payment_method">Choose Payment Method:</label>
+        <select name="payment_method" required>
+            <option value="UPI">UPI</option>
+            <option value="Bank Transfer">Bank Transfer</option>
+            <option value="Cash on Delivery">Cash on Delivery</option>
+        </select>
+
+        <br><br>
+        <button type="submit">Confirm Payment</button>
+    </form>
+</div>
+
+</body>
+</html>

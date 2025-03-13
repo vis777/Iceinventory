@@ -1,4 +1,4 @@
-{% extends 'index.html' %}
+{% extends 'adminindex.html' %}
 {% block content %}
 <html lang="en">
 <head>
@@ -22,6 +22,7 @@
                                     <th>Category</th>
                                     <th>Description</th>
                                     <th>Price</th>
+                                    <th>Stock</th>
                                     <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
@@ -40,6 +41,7 @@
                                     <td>{{ product.product_category.category_name }}</td>
                                     <td>{{ product.description }}</td>
                                     <td>{{ product.product_price }}</td>
+                                    <td>{{ product.stock }}</td>
                                     <td>
                                         {% if product.status == 'active' %}
                                             <span class="badge badge-success">Active</span>

@@ -1,4 +1,4 @@
-{% extends 'index.html' %}
+{% extends 'adminindex.html' %}
 {% block content %}
 <html lang="en">
 <head>
@@ -29,9 +29,13 @@
                       <label for="exampleTextarea1">Description</label>
                       <textarea class="form-control" id="exampleTextarea1" rows="4" name="description"></textarea>
                     </div>
-                      <div class="form-group">
+                    <div class="form-group">
                       <label for="exampleInputPrice">Price</label>
                       <input type="text" class="form-control" id="exampleInputPrice" placeholder="Price" name="price">
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputStock">Stock</label>
+                      <input type="text" class="form-control" id="exampleInputStock" placeholder="Stock" name="stock">
                     </div>
                     <div class="form-group">
                       <label for="statusSelect">Status</label>

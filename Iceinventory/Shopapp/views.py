@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from Shopapp.models import CategoryDb,ProductDb,IceStock
+from Shopapp.models import CategoryDb, ProductDb 
+from Iceapp.models import ContactDb, Order
+
+# ProductDb
 from django.core.files.storage import FileSystemStorage
 from django.utils.datastructures import MultiValueDictKeyError
 from django.contrib.auth import authenticate,login
@@ -9,7 +12,10 @@ from django.core.exceptions import ValidationError
 
 # Create your views here.
 def adminindexpage(request):
-    return render(request, "adminindex.html")
+    cat = CategoryDb.objects.all().count()
+    pro = ProductDb.objects.all().count()
+    order = Order.objects.all().count()
+    return render(request, "adminindex.html",{ 'cat':cat, 'pro':pro, 'order':order})
 
 def indexpage(request):
     return render(request, "index.html")
@@ -132,6 +138,7 @@ def saveproduct(request):
         product_name = request.POST.get('name')
         description = request.POST.get('description')
         product_price = request.POST.get('price')
+        stock = request.POST.get('stock')
         status = request.POST.get('status')
         product_image = request.FILES.get('image', None)
 
@@ -146,6 +153,7 @@ def saveproduct(request):
             product_name=product_name,
             description=description,
             product_price=product_price,
+            stock=stock,
             status=status,
             product_image=product_image
         )
@@ -172,6 +180,7 @@ def updateproduct(request, dataid):
         nam = request.POST.get('name')
         des = request.POST.get('description')
         pri = request.POST.get('price')
+        st = request.POST.get('stock')
 
         try:
             img = request.FILES['image']
@@ -185,6 +194,7 @@ def updateproduct(request, dataid):
             product_name=nam,
             description=des,
             product_price=pri,
+            stock=st,
             product_image=file
         )
 
@@ -194,68 +204,106 @@ def deleteproduct(request, dataid):
     prods = ProductDb.objects.filter(id=dataid)
     prods.delete()
     return redirect(product_display)
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views import View
+from django.contrib import messages
+from datetime import datetime
+from Iceapp.models import Order  # Adjust the import based on your app structure
 
-def add_icestock(request):
-    products = ProductDb.objects.all()  # Fetch available products
-    return render(request, "AddIceStock.html", {"products": products})
+class OrderListView(View):
+    """View to display all orders."""
+    def get(self, request):
+        orders = Order.objects.all().order_by('-order_date')
+        return render(request, "OrderList.html", {"orders": orders})
 
-def save_icestock(request):
-    if request.method == "POST":
-        ice_type_id = request.POST.get("ice_type")  # Get selected product ID
-        quantity_kg = request.POST.get("quantity_kg")
-        reorder_point = request.POST.get("reorder_point")
+class UpdateOrderStatusView(View):
+    """View to update the status of an order."""
+    def post(self, request, order_id):
+        order = get_object_or_404(Order, id=order_id)
+        new_status = request.POST.get("status")
 
-        try:
-            ice_type = ProductDb.objects.get(id=ice_type_id)  # Fetch product instance
-            IceStock.objects.create(
-                ice_type=ice_type,
-                quantity_kg=quantity_kg,
-                reorder_point=reorder_point,
-            )
-            messages.success(request, "Ice stock added successfully!")
-        except ProductDb.DoesNotExist:
-            messages.error(request, "Invalid product selection.")
+        if new_status in dict(Order.STATUS_CHOICES):
+            order.update_status(new_status)
+            messages.success(request, f"Order {order.id} status updated to {new_status}.")
+        else:
+            messages.error(request, "Invalid status selection.")
 
-        return redirect("icestock_display")
+        return redirect("order_list")
 
-def icestock_display(request):
-    stocks = IceStock.objects.all()
-    return render(request, "IceStockList.html", {"stocks": stocks})
+class DeleteOrderView(View):
+    """View to delete an order."""
+    def post(self, request, order_id):
+        order = get_object_or_404(Order, id=order_id)
+        order.delete()
+        messages.success(request, f"Order {order.id} deleted successfully.")
+        return redirect("order_list")
 
-def edit_icestock(request, dataid):
-    products = ProductDb.objects.all()  # Fetch all products for selection
-    stock = get_object_or_404(IceStock, id=dataid)  # Fetch the stock entry
-    return render(request, "EditIcestock.html", {'products': products, 'stock': stock})
+def contact_details(request):
+    """Fetch and display all contact messages."""
+    contacts = ContactDb.objects.all().order_by("-id")  # Latest messages first
+    return render(request, "contact_details.html", {"contacts": contacts})
 
-def update_icestock(request, dataid):
-    if request.method == "POST":
-        print(request.POST)  # Debugging: See what data is being sent
+# def add_icestock(request):
+#     products = ProductDb.objects.all()  # Fetch available products
+#     return render(request, "AddIceStock.html", {"products": products})
 
-        product_id = request.POST.get('ice_type')  # Match form field name
+# def save_icestock(request):
+#     if request.method == "POST":
+#         ice_type_id = request.POST.get("ice_type")  # Get selected product ID
+#         quantity_kg = request.POST.get("quantity_kg")
+#         reorder_point = request.POST.get("reorder_point")
+
+#         try:
+#             ice_type = ProductDb.objects.get(id=ice_type_id)  # Fetch product instance
+#             IceStock.objects.create(
+#                 ice_type=ice_type,
+#                 quantity_kg=quantity_kg,
+#                 reorder_point=reorder_point,
+#             )
+#             messages.success(request, "Ice stock added successfully!")
+#         except ProductDb.DoesNotExist:
+#             messages.error(request, "Invalid product selection.")
+
+#         return redirect("icestock_display")
+
+# def icestock_display(request):
+#     stocks = IceStock.objects.all()
+#     return render(request, "IceStockList.html", {"stocks": stocks})
+
+# def edit_icestock(request, dataid):
+#     products = ProductDb.objects.all()  # Fetch all products for selection
+#     stock = get_object_or_404(IceStock, id=dataid)  # Fetch the stock entry
+#     return render(request, "EditIcestock.html", {'products': products, 'stock': stock})
+
+# def update_icestock(request, dataid):
+#     if request.method == "POST":
+#         print(request.POST)  # Debugging: See what data is being sent
+
+#         product_id = request.POST.get('ice_type')  # Match form field name
         
-        # Ensure product_id is provided
-        if not product_id:
-            return render(request, "EditIceStock.html", {"error": "Product selection is required."})
+#         # Ensure product_id is provided
+#         if not product_id:
+#             return render(request, "EditIceStock.html", {"error": "Product selection is required."})
 
-        # Fetch the product safely
-        product = get_object_or_404(ProductDb, id=product_id)
+#         # Fetch the product safely
+#         product = get_object_or_404(ProductDb, id=product_id)
 
-        # Get input values
-        quantity = request.POST.get('quantity_kg')
-        reorder_point = request.POST.get('reorder_point')
+#         # Get input values
+#         quantity = request.POST.get('quantity_kg')
+#         reorder_point = request.POST.get('reorder_point')
 
-        # Fetch the existing IceStock entry and update it
-        icestock = get_object_or_404(IceStock, id=dataid)
-        icestock.ice_type = product
-        icestock.quantity_kg = quantity
-        icestock.reorder_point = reorder_point
-        icestock.save()
+#         # Fetch the existing IceStock entry and update it
+#         icestock = get_object_or_404(IceStock, id=dataid)
+#         icestock.ice_type = product
+#         icestock.quantity_kg = quantity
+#         icestock.reorder_point = reorder_point
+#         icestock.save()
 
-        return redirect('icestock_display')
+#         return redirect('icestock_display')
 
-    return render(request, "EditIceStock.html", {"error": "Invalid request method."})
+#     return render(request, "EditIceStock.html", {"error": "Invalid request method."})
 
-def delete_icestock(request, dataid):
-    stock = IceStock.objects.filter(id=dataid)
-    stock.delete()
-    return redirect('icestock_display')  # Redirect after deletion
+# def delete_icestock(request, dataid):
+#     stock = IceStock.objects.filter(id=dataid)
+#     stock.delete()
+#     return redirect('icestock_display')  # Redirect after deletion

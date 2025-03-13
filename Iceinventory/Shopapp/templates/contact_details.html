@@ -1,0 +1,36 @@
+{% extends 'adminindex.html' %} 
+{% block content %}
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Contact Messages</h4>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Subject</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contact in contacts %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ contact.Contact_Name }}</td>
+                    <td>{{ contact.Contact_Email }}</td>
+                    <td>{{ contact.Subject }}</td>
+                    <td>{{ contact.Message }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">No messages found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

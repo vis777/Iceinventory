@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-		<title>Bakery shop</title>
+		<title>ICREAM</title>
 
  		<!-- Google font -->
  		<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
@@ -43,12 +43,15 @@
 				<div class="container">
 					<ul class="header-links pull-left">
 						<li><a href="#"><i class="fa fa-phone"></i> +021-95-51-84</a></li>
-						<li><a href="#"><i class="fa fa-envelope-o"></i> email@email.com</a></li>
+						<li><a href="#"><i class="fa fa-envelope-o"></i> iceinventory@email.com</a></li>
 						<li><a href="#"><i class="fa fa-map-marker"></i> 1734 Stonecoal Road</a></li>
 					</ul>
 					<ul class="header-links pull-right">
-						<li><a href="#"><i class="fa fa-dollar"></i> USD</a></li>
-						<li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>
+						{% if user.username %}
+						<li><a href="{% url 'user_logout' %}"><i class="fa fa-user-o"></i> Welcome {{user.username}} / Logout</a></li>
+						{% else %}
+						<li><a href="#"><i class="fa fa-user-o"></i> Register or Login</a></li>
+						{% endif %}
 					</ul>
 				</div>
 			</div>
@@ -64,7 +67,7 @@
 						<div class="col-md-3">
 							<div class="header-logo">
 								<a href="#" class="logo">
-									<img src="{% static 'assets/img/bakerylogo.jpg' %}" alt="" height="100px">
+									<img src="{% static 'assets/img/IceLogo.png' %}" alt="" height="100px">
 								</a>
 							</div>
 						</div>
@@ -212,15 +215,15 @@
 			<div class="container">
 				<!-- row -->
 				<div class="row">
-
-					<form class="col-md-7">
+					<form method="post" action="{% url 'save_checkout' %}">
+						{% csrf_token %}
+						<div class="col-md-7">
 						<!-- Billing Details -->
 						<div class="billing-details">
 							<div class="section-title">
 								<h3 class="title">Billing address</h3>
 							</div>
-							<form action="{% url 'save_checkout' %}" method="post" enctype="multipart/form-data">
-								{% csrf_token %}
+						
 							<div class="form-group">
 								<input class="input" type="text" name="fname" placeholder="First Name">
 							</div>
@@ -246,7 +249,7 @@
 								<input class="input" type="tel" name="tele" placeholder="Telephone">
 							</div>
 							<div>
-								<button href="#" class="site-btn" type="submit">Submit</button>
+								{% comment %} <button href="#" class="site-btn" type="submit">Submit</button> {% endcomment %}
 							</div>
 							<div class="form-group">
 								<div class="input-checkbox">
@@ -262,59 +265,12 @@
 									</div>
 								</div>
 							</div>
-					</form>
-						<!-- /Billing Details -->
-
-						<!-- Shiping Details -->
-						<!--<div class="shiping-details">-->
-							<!--<div class="section-title">-->
-								<!--<h3 class="title">Shiping address</h3>-->
-							<!--</div>-->
-							<!--<div class="input-checkbox">-->
-								<!--<input type="checkbox" id="shiping-address">-->
-								<!--<label for="shiping-address">-->
-									<!--<span></span>-->
-									<!--Ship to a diffrent address?-->
-								<!--</label>-->
-								<!--<div class="caption">-->
-									<!--<div class="form-group">-->
-										<!--<input class="input" type="text" name="first-name" placeholder="First Name">-->
-									<!--</div>-->
-									<!--<div class="form-group">-->
-										<!--<input class="input" type="text" name="last-name" placeholder="Last Name">-->
-									<!--</div>-->
-									<!--<div class="form-group">-->
-										<!--<input class="input" type="email" name="email" placeholder="Email">-->
-									<!--</div>-->
-									<!--<div class="form-group">-->
-										<!--<input class="input" type="text" name="address" placeholder="Address">-->
-									<!--</div>-->
-									<!--<div class="form-group">-->
-										<!--<input class="input" type="text" name="city" placeholder="City">-->
-									<!--</div>-->
-									<!--<div class="form-group">-->
-										<!--<input class="input" type="text" name="country" placeholder="Country">-->
-									<!--</div>-->
-									<!--<div class="form-group">-->
-										<!--<input class="input" type="text" name="zip-code" placeholder="ZIP Code">-->
-									<!--</div>-->
-									<!--<div class="form-group">-->
-										<!--<input class="input" type="tel" name="tel" placeholder="Telephone">-->
-									<!--</div>-->
-								<!--</div>-->
-							<!--</div>-->
-						<!--</div>-->
-						<!-- /Shiping Details -->
-
-						<!-- Order notes -->
-						<div class="order-notes">
-							<textarea class="input" placeholder="Order Notes"></textarea>
 						</div>
-						<!-- /Order notes -->
-					</div>
+						</div>
+					
 
-					<!-- Order Details -->
-					<div class="col-md-5 order-details">
+						<!-- Order Details -->
+						<div class="col-md-5 order-details">
 						<div class="section-title text-center">
 							<h3 class="title">Your Order</h3>
 						</div>
@@ -326,6 +282,12 @@
 							{% for i in data %}
 							<div class="order-products">
 								<div class="order-col">
+									<div>
+										<input type="hidden" name="product_id" value="{{i.id}}">
+										<input type="hidden" name="user" value="{{request.user.username}}">
+									</div>
+									
+										
 									<div>{{i.Productname}}</div>
 									<div>{{i.Total_Price}}</div>
 								</div>
@@ -355,27 +317,6 @@
 									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
 								</div>
 							</div>
-							<!--<div class="input-radio">-->
-								<!--<input type="radio" name="payment" id="payment-2">-->
-								<!--<label for="payment-2">-->
-									<!--<span></span>-->
-									<!--Cheque Payment-->
-								<!--</label>-->
-								<!--<div class="caption">-->
-									<!--<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>-->
-								<!--</div>-->
-							<!--</div>-->
-							<!--<div class="input-radio">-->
-								<!--<input type="radio" name="payment" id="payment-3">-->
-								<!--<label for="payment-3">-->
-									<!--<span></span>-->
-									<!--Paypal System-->
-								<!--</label>-->
-								<!--<div class="caption">-->
-									<!--<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>-->
-								<!--</div>-->
-							<!--</div>-->
-						<!--</div>-->
 						<div class="input-checkbox">
 							<input type="checkbox" id="terms">
 							<label for="terms">
@@ -383,9 +324,11 @@
 								I've read and accept the <a href="#">terms & conditions</a>
 							</label>
 						</div>
-						<a href="{% url 'paymentpage' %}" class="primary-btn order-submit">Place order</a>
+						{% comment %} <a href="{% url 'paymentpage' %}" class="primary-btn order-submit">Place order</a> {% endcomment %}
+						<button class="primary-btn order-submit" type="submit">Place Order</button>
 					</div>
-					<!-- /Order Details -->
+						<!-- /Order Details -->
+					</form>
 				</div>
 				<!-- /row -->
 			</div>
@@ -430,7 +373,7 @@
 		<!-- /NEWSLETTER -->
 
 		<!-- FOOTER -->
-				<footer id="footer">
+		<footer id="footer">
 			<!-- top footer -->
 			<div class="section">
 				<!-- container -->
@@ -440,11 +383,11 @@
 						<div class="col-md-3 col-xs-6">
 							<div class="footer">
 								<h3 class="footer-title">About Us</h3>
-								<p>ShopBakes is one of only a handful few enduring Craft Bakeries in Surrey.</p>
+								<p>iCREAM We provide premium-quality crushed ice, perfect for refreshing drinks, desserts, and all your cooling needs.</p>
 								<ul class="footer-links">
 									<li><a href="#"><i class="fa fa-map-marker"></i>1734 Stonecoal Road</a></li>
 									<li><a href="#"><i class="fa fa-phone"></i>+021-95-51-84</a></li>
-									<li><a href="#"><i class="fa fa-envelope-o"></i>shopbakes@email.com</a></li>
+									<li><a href="#"><i class="fa fa-envelope-o"></i>iceinventory@email.com</a></li>
 								</ul>
 							</div>
 						</div>
@@ -453,11 +396,11 @@
 							<div class="footer">
 								<h3 class="footer-title">Categories</h3>
 								<ul class="footer-links">
-									<li><a href="#">Cakes</a></li>
-									<li><a href="#">Breads</a></li>
-									<li><a href="#">Biscuit</a></li>
-									<li><a href="#">Pastriess</a></li>
-									<li><a href="#">Cupcakes</a></li>
+									<li><a href="#">Ice</a></li>
+									<li><a href="#">Ice Cubes</a></li>
+									<li><a href="#">Crushed Ice</a></li>
+									<li><a href="#">Icecream</a></li>
+									<li><a href="#">Icepacks</a></li>
 								</ul>
 							</div>
 						</div>

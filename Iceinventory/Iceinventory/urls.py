@@ -46,12 +46,12 @@ urlpatterns = [
     path('updateproduct/<int:dataid>/', views.updateproduct, name='updateproduct'),
     path('deleteproduct/<int:dataid>/', views.deleteproduct, name='deleteproduct'),
 
-    path("addicestock/", views.add_icestock, name="add_icestock"),
-    path("saveicestock/", views.save_icestock, name="save_icestock"),
-    path("icestock/", views.icestock_display, name="icestock_display"),
-    path('edit_icestock/<int:dataid>/', views.edit_icestock, name='edit_icestock'),
-    path('update_icestock/<int:dataid>/', views.update_icestock, name='update_icestock'),
-    path('delete_icestock/<int:dataid>/', views.delete_icestock, name='delete_icestock'),
+
+    path("orders/", views.OrderListView.as_view(), name="order_list"),
+    path("orders/update/<int:order_id>/", views.UpdateOrderStatusView.as_view(), name="update_order_status"),
+    path("orders/delete/<int:order_id>/", views.DeleteOrderView.as_view(), name="delete_order"),
+
+     path("contact-details/", views.contact_details, name="contact_details"),
     
 
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

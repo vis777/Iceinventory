@@ -1,9 +1,9 @@
-{% extends 'index.html' %}
+{% extends 'adminindex.html' %}
 {% block content %}
 <div class="card">
     <div class="card-body">
         <h4 class="card-title">Category List</h4>
-        <table class="table table-bordered">
+        <table class="table table-bordered table-responsive">
             <thead>
                 <tr>
                     <th>#</th>
@@ -33,7 +33,7 @@
                     <td>{{ cat.created_at|date:"Y-m-d H:i" }}</td>
                     <td>{{ cat.updated_at|date:"Y-m-d H:i" }}</td>
                     <td>
-                        <a href="{% url 'editcategory' cat.id %}" class="btn btn-info btn-sm">Edit</a>
+                        <a href="{% url 'editcategory' cat.id %}" class="btn btn-info btn-sm m-2">Edit</a>
                         <form method="POST" action="{% url 'deletecategory' cat.id %}" style="display:inline;">
                           {% csrf_token %}
                           <button type="submit" class="btn btn-danger btn-sm">Delete</button>
