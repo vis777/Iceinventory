@@ -4,16 +4,149 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Successful</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .success-card {
+            max-width: 500px;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease-in-out;
+            overflow: hidden;
+        }
+        
+        .success-header {
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .success-icon {
+            background-color: white;
+            color: #4CAF50;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            font-size: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .detail-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .detail-value {
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .home-button {
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 30px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        
+        .home-button:hover {
+            background-color: #388E3C;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        @keyframes fadeIn {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+    </style>
 </head>
 <body>
-
-<div class="container">
-    <h2>Payment Successful!</h2>
-    <p>Order ID: {{ order.id }}</p>
-    <p>Payment Method: {{ order.payment_method }}</p>
-    <p>Your order has been placed successfully.</p>
-    <a href="{% url 'homepage' %}">Go to Home</a>
-</div>
-
+    <div class="container">
+        <div class="card success-card">
+            <div class="success-header">
+                <div class="success-icon pulse-animation">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h2 class="fw-bold mb-0">Payment Successful!</h2>
+                <div class="position-absolute top-0 end-0 p-3">
+                    <div class="badge bg-light text-success">Confirmed</div>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <p class="fs-5 text-muted">Thank you for your purchase!</p>
+                </div>
+                
+                <div class="detail-item d-flex justify-content-between">
+                    <span class="detail-label">Order ID:</span>
+                    <span class="detail-value">{{ order.id }}</span>
+                </div>
+                
+                <div class="detail-item d-flex justify-content-between">
+                    <span class="detail-label">Payment Method:</span>
+                    <span class="detail-value">{{ order.payment_method }}</span>
+                </div>
+                
+                <div class="alert alert-light text-center mt-4 mb-4">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Your order has been placed successfully.
+                </div>
+                
+                <div class="text-center mt-4">
+                    <a href="{% url 'homepage' %}" class="btn btn-primary home-button">
+                        <i class="fas fa-home me-2"></i>Go to Home
+                    </a>
+                </div>
+            </div>
+            <div class="card-footer text-center bg-light p-3">
+                <small class="text-muted">A confirmation email has been sent to your registered email address.</small>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
