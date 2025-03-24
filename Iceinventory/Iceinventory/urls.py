@@ -45,13 +45,27 @@ urlpatterns = [
     path('editproduct/<int:dataid>/', views.editproduct, name='editproduct'),
     path('updateproduct/<int:dataid>/', views.updateproduct, name='updateproduct'),
     path('deleteproduct/<int:dataid>/', views.deleteproduct, name='deleteproduct'),
+    
+    path('category/approve/<int:dataid>/', views.approve_category, name='approve_category'),
+    path('category/reject/<int:dataid>/', views.reject_category, name='reject_category'),
+    path('product/approve/<int:dataid>/', views.approve_product, name='approve_product'),
+    path('product/reject/<int:dataid>/', views.reject_product, name='reject_product'),
 
+    path('categories/', views.admin_category_approval, name='admin_category_approval'),
+    path('products/', views.admin_product_approval, name='admin_product_approval'),
 
     path("orders/", views.OrderListView.as_view(), name="order_list"),
     path("orders/update/<int:order_id>/", views.UpdateOrderStatusView.as_view(), name="update_order_status"),
     path("orders/delete/<int:order_id>/", views.DeleteOrderView.as_view(), name="delete_order"),
 
-     path("contact-details/", views.contact_details, name="contact_details"),
+    path("contact-details/", views.contact_details, name="contact_details"),
+    path('ownerpage/<int:user_id>/', views.ownerpage, name='ownerpage'),
+    path('register/', views.register, name='register'),
+    path('login/', views.shop_owner_login, name='login'),
+    path('logout/', views.shop_owner_logout, name='logout'),
+    path("profile/", views.profile_view, name="profile"),
+    path("edit-profile/", views.edit_profile, name="editprofile"),
+
     
 
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

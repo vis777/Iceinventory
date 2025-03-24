@@ -1,0 +1,68 @@
+{% extends 'Ownerindex.html' %} 
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10 col-12">
+      <div class="card shadow-lg border-0 rounded-lg">
+        <div class="card-header bg-primary text-white">
+          <h4 class="card-title mb-0 text-center">Edit Your Profile</h4>
+        </div>
+        <div class="card-body p-4">
+          <form class="forms-sample" method="post" action="{% url 'editprofile' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <div class="form-group mb-3">
+                  <label for="nameInput" class="form-label fw-bold">Owner Name</label>
+                  <input type="text" class="form-control rounded-pill" id="nameInput" name="owner_name" value="{{ shop_owner.owner_name }}">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="emailInput" class="form-label fw-bold">Email</label>
+                    <input type="email" class="form-control rounded-pill" id="emailInput" name="email" value="{{ user.email }}">
+                  </div>
+                <div class="form-group mb-3">
+                  <label for="phoneInput" class="form-label fw-bold">Phone</label>
+                  <input type="text" class="form-control rounded-pill" id="phoneInput" name="phone" value="{{ shop_owner.phone }}">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group mb-3">
+                  <label for="shopNameInput" class="form-label fw-bold">Shop Name</label>
+                  <input type="text" class="form-control rounded-pill" id="shopNameInput" name="shop_name" value="{{ shop_owner.shop_name }}">
+                </div>
+                <div class="form-group mb-3">
+                  <label for="locationInput" class="form-label fw-bold">Location</label>
+                  <textarea class="form-control rounded" id="locationInput" name="location" rows="3">{{ shop_owner.location }}</textarea>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-group mb-4">
+              <label for="profileImageInput" class="form-label fw-bold">Upload Shop Image</label>
+              <div class="d-flex align-items-center mb-2">
+                {% if shop_owner.shop_image %}
+                <div class="position-relative me-3">
+                  <img src="{{ shop_owner.shop_image.url }}" class="rounded-circle img-thumbnail" width="100" height="100" alt="Current shop image">
+                  <div class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+                    <i class="fas fa-camera"></i>
+                  </div>
+                </div>
+                {% endif %}
+                <div class="input-group">
+                  <input type="file" class="form-control" id="profileImageInput" name="shop_image">
+                </div>
+              </div>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+              <a href="{% url 'profile' %}" class="btn btn-light btn-lg px-4 me-md-2">Cancel</a>
+              <button type="submit" class="btn btn-primary btn-lg px-4">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

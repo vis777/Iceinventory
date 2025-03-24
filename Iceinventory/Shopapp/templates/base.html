@@ -1,0 +1,30 @@
+{% comment %} <!DOCTYPE html> {% endcomment %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Shop Management{% endblock %}</title>>
+</head>
+<body>
+    <header>
+        <h1>Shop Management</h1>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="{% url 'ownerpage' %}">Dashboard</a></li>
+            <li><a href="{% url 'profile' %}">Profile</a></li>
+            <li><a href="">Categories</a></li>
+            <li><a href="">Products</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    {% comment %} <footer>
+        <p>&copy; 2025 Shop Management</p>
+    </footer> {% endcomment %}
+</body>
+</html>

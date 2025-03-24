@@ -5,12 +5,17 @@ from Iceapp.models import ContactDb, Order
 # ProductDb
 from django.core.files.storage import FileSystemStorage
 from django.utils.datastructures import MultiValueDictKeyError
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate,login, logout
+from django.views.decorators.cache import never_cache, cache_control
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 
 # Create your views here.
+@login_required(login_url='admin_login')
+@never_cache
+@cache_control(no_store=True, must_revalidate=True)
 def adminindexpage(request):
     cat = CategoryDb.objects.all().count()
     pro = ProductDb.objects.all().count()
@@ -42,8 +47,9 @@ def adminlogin(request):
             messages.error(request, "Invalid Username or Password")
             return redirect(admin_login)
 def admin_logout(request):
-    del request.session['username']
-    messages.success(request, "Logout successfull")
+    logout(request)  # Clears the session
+    messages.success(request, "Logout successful")
+    
     return redirect(indexpage)
 
 def categorypage(request):
@@ -55,6 +61,8 @@ def savecategory(request):
         description = request.POST.get('description')
         status = request.POST.get('status')
         category_image = request.FILES.get('category_image')
+        user = request.user
+        shop_owner = ShopOwner.objects.get(user=user)
 
         if not category_name:
             messages.error(request, "Category name is required!")
@@ -65,7 +73,8 @@ def savecategory(request):
             category_name=category_name,
             description=description,
             status=status,
-            category_image=category_image
+            category_image=category_image,
+            shop_owner=shop_owner,
         )
         try:
             category.full_clean()
@@ -77,7 +86,7 @@ def savecategory(request):
         return redirect("categorypage")
 
 def category_display(request):
-    categories = CategoryDb.objects.all()
+    categories = CategoryDb.objects.filter(is_approved=True)
     return render(request, 'DisplayCategory.html', {'categories': categories})
 
 def deletecategory(request, dataid):
@@ -133,6 +142,9 @@ def saveproduct(request):
             return redirect('productpage')
 
         category = get_object_or_404(CategoryDb, id=int(cat_id))  # Fetch category object
+        user = request.user
+        # shop_owner = ShopOwner.objects.get(user=user)
+        shop_owner = get_object_or_404(ShopOwner, user=user)
 
         # Get form data
         product_name = request.POST.get('name')
@@ -155,7 +167,8 @@ def saveproduct(request):
             product_price=product_price,
             stock=stock,
             status=status,
-            product_image=product_image
+            product_image=product_image,
+            shop_owner=shop_owner
         )
         obj.save()
         messages.success(request, "Product added successfully!")
@@ -166,8 +179,8 @@ def saveproduct(request):
 
 
 def product_display(request):
-    prod = ProductDb.objects.all()
-    return render(request,'DisplayProduct.html',{'prod':prod})
+    prod = ProductDb.objects.filter(is_approved=True, stock__gt=0)
+    return render(request, 'DisplayProduct.html', {'prod': prod})
 def editproduct(request,dataid):
     cat = CategoryDb.objects.all()
     prods = ProductDb.objects.get(id=dataid)
@@ -204,6 +217,53 @@ def deleteproduct(request, dataid):
     prods = ProductDb.objects.filter(id=dataid)
     prods.delete()
     return redirect(product_display)
+@login_required(login_url='admin_login')
+@never_cache
+@cache_control(no_store=True, must_revalidate=True)
+def approve_category(request, dataid):
+    category = get_object_or_404(CategoryDb, id=dataid)
+    category.is_approved = True
+    category.save()
+    messages.success(request, "Category approved successfully!")
+    return redirect('admin_category_approval')
+@login_required(login_url='admin_login')
+@never_cache
+@cache_control(no_store=True, must_revalidate=True)
+def reject_category(request, dataid):
+    category = get_object_or_404(CategoryDb, id=dataid)
+    category.delete()
+    messages.error(request, "Category rejected and removed!")
+    return redirect('admin_category_approval')
+@login_required(login_url='admin_login')
+@never_cache
+@cache_control(no_store=True, must_revalidate=True)
+def approve_product(request, dataid):
+    product = get_object_or_404(ProductDb, id=dataid)
+    product.is_approved = True
+    product.save()
+    messages.success(request, "Product approved successfully!")
+    return redirect('admin_product_approval')
+@login_required(login_url='admin_login')
+@never_cache
+@cache_control(no_store=True, must_revalidate=True)
+def reject_product(request, dataid):
+    product = get_object_or_404(ProductDb, id=dataid)
+    product.delete()
+    messages.error(request, "Product rejected and removed!")
+    return redirect('admin_product_approval')
+@login_required(login_url='admin_login')
+@never_cache
+@cache_control(no_store=True, must_revalidate=True)
+def admin_category_approval(request):
+    categories = CategoryDb.objects.filter(is_approved=False).select_related('shop_owner')
+    return render(request, 'AdminCategoryApproval.html', {'categories': categories})
+@login_required(login_url='admin_login')
+@never_cache
+@cache_control(no_store=True, must_revalidate=True)
+def admin_product_approval(request):
+    products = ProductDb.objects.filter(is_approved=False)
+    return render(request, 'AdminProductApproval.html', {'products': products})
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.contrib import messages
@@ -237,73 +297,171 @@ class DeleteOrderView(View):
         order.delete()
         messages.success(request, f"Order {order.id} deleted successfully.")
         return redirect("order_list")
-
+@login_required(login_url='admin_login')
+@never_cache
+@cache_control(no_store=True, must_revalidate=True)
 def contact_details(request):
     """Fetch and display all contact messages."""
     contacts = ContactDb.objects.all().order_by("-id")  # Latest messages first
     return render(request, "contact_details.html", {"contacts": contacts})
 
-# def add_icestock(request):
-#     products = ProductDb.objects.all()  # Fetch available products
-#     return render(request, "AddIceStock.html", {"products": products})
 
-# def save_icestock(request):
-#     if request.method == "POST":
-#         ice_type_id = request.POST.get("ice_type")  # Get selected product ID
-#         quantity_kg = request.POST.get("quantity_kg")
-#         reorder_point = request.POST.get("reorder_point")
 
-#         try:
-#             ice_type = ProductDb.objects.get(id=ice_type_id)  # Fetch product instance
-#             IceStock.objects.create(
-#                 ice_type=ice_type,
-#                 quantity_kg=quantity_kg,
-#                 reorder_point=reorder_point,
-#             )
-#             messages.success(request, "Ice stock added successfully!")
-#         except ProductDb.DoesNotExist:
-#             messages.error(request, "Invalid product selection.")
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, authenticate
+from django.contrib import messages
+from django.contrib.auth.models import User
+from .forms import ShopOwnerRegistrationForm
+from .models import ShopOwner
 
-#         return redirect("icestock_display")
 
-# def icestock_display(request):
-#     stocks = IceStock.objects.all()
-#     return render(request, "IceStockList.html", {"stocks": stocks})
 
-# def edit_icestock(request, dataid):
-#     products = ProductDb.objects.all()  # Fetch all products for selection
-#     stock = get_object_or_404(IceStock, id=dataid)  # Fetch the stock entry
-#     return render(request, "EditIcestock.html", {'products': products, 'stock': stock})
+def ownerpage(request, user_id):
+    shop_owner = get_object_or_404(ShopOwner, user__id=user_id)
 
-# def update_icestock(request, dataid):
-#     if request.method == "POST":
-#         print(request.POST)  # Debugging: See what data is being sent
+    # Ensure the logged-in user is accessing their own page
+    if request.user.id != user_id:
+        return redirect("forbidden_page")  # Redirect if unauthorized
 
-#         product_id = request.POST.get('ice_type')  # Match form field name
-        
-#         # Ensure product_id is provided
-#         if not product_id:
-#             return render(request, "EditIceStock.html", {"error": "Product selection is required."})
+    return render(request, "Ownerindex.html", {"shop_owner": shop_owner})
+def register(request):
+    if request.method == 'POST':
+        form = ShopOwnerRegistrationForm(request.POST, request.FILES)
+        if form.is_valid():
+            user = User.objects.create_user(
+                username=form.cleaned_data['username'],
+                email=form.cleaned_data['email'],
+                password=form.cleaned_data['password']
+            )
+            shop_owner = form.save(commit=False)
+            shop_owner.user = user
+            shop_owner.save()
+            login(request, user)  # Auto-login after registration
+            return redirect('ownerpage', user_id=user.id)  # Redirect to a dashboard page
+    else:
+        form = ShopOwnerRegistrationForm()
+    
+    return render(request, 'Register.html', {'form': form})
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, authenticate
+from django.contrib import messages
+from .forms import ShopOwnerLoginForm
 
-#         # Fetch the product safely
-#         product = get_object_or_404(ProductDb, id=product_id)
+def shop_owner_login(request):
+    
+    if request.method == "POST":
+        form = ShopOwnerLoginForm(data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            
+            if user is not None:
+                login(request, user)
+                remember_me = form.cleaned_data.get('remember_me')
 
-#         # Get input values
-#         quantity = request.POST.get('quantity_kg')
-#         reorder_point = request.POST.get('reorder_point')
+                # Set session expiry based on "Remember Me" checkbox
+                if remember_me:
+                    request.session.set_expiry(1209600)  # 2 weeks
+                else:
+                    request.session.set_expiry(0)  # Session expires when browser closes
+                
+                messages.success(request, "Login successful!")
+                return redirect('ownerpage', user_id=user.id)  # Redirect to a dashboard page after login
+            else:
+                messages.error(request, "Invalid username or password.")
+        else:
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = ShopOwnerLoginForm()
 
-#         # Fetch the existing IceStock entry and update it
-#         icestock = get_object_or_404(IceStock, id=dataid)
-#         icestock.ice_type = product
-#         icestock.quantity_kg = quantity
-#         icestock.reorder_point = reorder_point
-#         icestock.save()
+    return render(request, "Login.html", {"form": form})
 
-#         return redirect('icestock_display')
+    from django.contrib.auth import logout
 
-#     return render(request, "EditIceStock.html", {"error": "Invalid request method."})
+def shop_owner_logout(request):
+    logout(request)
+    messages.success(request, "You have been logged out successfully.")
+    return redirect('indexpage')  # Redirect back to login page after logout
 
-# def delete_icestock(request, dataid):
-#     stock = IceStock.objects.filter(id=dataid)
-#     stock.delete()
-#     return redirect('icestock_display')  # Redirect after deletion
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.contrib.auth.models import User
+from .models import ShopOwner
+from .forms import ShopOwnerRegistrationForm
+
+# @login_required
+# def profile_view(request):
+#     shop_owner = get_object_or_404(ShopOwner, user=request.user)
+#     user = request.user  
+
+#     if request.method == 'POST':
+#         if 'delete_profile' in request.POST:
+#             shop_owner.delete()
+#             user.delete()
+#             messages.success(request, 'Profile deleted successfully!')
+#             return redirect('indepage')
+
+#         form = ShopOwnerRegistrationForm(request.POST, request.FILES, instance=shop_owner)
+#         if form.is_valid():
+#             shop_owner = form.save(commit=False)
+#             user.username = request.POST.get("username", user.username)
+#             user.email = request.POST.get("email", user.email)
+#             user.save()
+#             shop_owner.save()
+#             messages.success(request, 'Profile updated successfully!')
+#             return redirect('profile')
+#     else:
+#         form = ShopOwnerRegistrationForm(instance=shop_owner)
+
+#     return render(request, 'owner_profile.html', {'form': form, 'shop_owner': shop_owner})
+@login_required
+def profile_view(request):
+    print("✅ Accessing profile page for user:", request.user)
+
+    shop_owner = get_object_or_404(ShopOwner, user=request.user)
+    user = request.user  
+
+    print("✅ ShopOwner found:", shop_owner)
+
+    form = ShopOwnerRegistrationForm(instance=shop_owner)
+
+    return render(request, 'owner_profile.html', {'form': form, 'shop_owner': shop_owner})
+
+
+@login_required
+def edit_profile(request):
+    shop_owner = get_object_or_404(ShopOwner, user=request.user)
+    user = request.user  # Get user instance
+
+    if request.method == "POST":
+        form = ShopOwnerRegistrationForm(request.POST, request.FILES, instance=shop_owner)
+
+        if form.is_valid():
+            shop_owner = form.save(commit=False)
+            shop_owner.owner_name = form.cleaned_data["owner_name"]
+            shop_owner.phone = form.cleaned_data["phone"]
+            shop_owner.shop_name = form.cleaned_data["shop_name"]
+            shop_owner.location = form.cleaned_data["location"]
+
+            # Update profile image only if a new one is uploaded
+            if "shop_image" in request.FILES:
+                shop_owner.shop_image = request.FILES["shop_image"]
+
+            # Update the user email separately
+            user.email = form.cleaned_data["email"]
+            user.save()
+
+            shop_owner.save()
+            messages.success(request, "Profile updated successfully!")
+            return redirect("profile")  # Redirect to profile page
+
+        else:
+            print("❌ Form errors:", form.errors)
+            messages.error(request, "Please correct the errors below.")
+
+    else:
+        form = ShopOwnerRegistrationForm(instance=shop_owner, initial={"email": user.email})
+
+    return render(request, "EditProfile.html", {"form": form, "shop_owner": shop_owner})

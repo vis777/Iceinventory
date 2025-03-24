@@ -1,7 +1,20 @@
 from django.db import models
-# from Iceapp.models import Order
+from django.contrib.auth.models import User
+
+
 
 # Category Model
+
+class ShopOwner(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    owner_name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=15, unique=True)
+    shop_name = models.CharField(max_length=150)
+    location = models.TextField()
+    shop_image = models.ImageField(upload_to='shop_images/')
+
+    def __str__(self):
+        return self.user.username
 class CategoryDb(models.Model):
     category_name = models.CharField(max_length=100, null=True, blank=True)
     description = models.TextField(null=True, blank=True)  # Increased field size for more details
@@ -13,7 +26,8 @@ class CategoryDb(models.Model):
     category_image = models.ImageField(upload_to="category_images", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)  # Track creation time
     updated_at = models.DateTimeField(auto_now=True)  # Track last update
-
+    is_approved = models.BooleanField(default=False) 
+    shop_owner = models.ForeignKey(ShopOwner, on_delete=models.CASCADE, null=True, blank=True)
     def __str__(self):
         return self.category_name if self.category_name else "Unnamed Category"
 
@@ -33,9 +47,14 @@ class ProductDb(models.Model):
     product_image = models.ImageField(upload_to="product_images", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    is_approved = models.BooleanField(default=False)
+    shop_owner = models.ForeignKey("ShopOwner", on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.product_name if self.product_name else "Unnamed Product"
+
+
+
 
 
 # # Ice Stock Model

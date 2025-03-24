@@ -1,0 +1,74 @@
+{% extends "adminindex.html" %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pending Approvals</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://unpkg.com/sweetalert@2.1.2/dist/sweetalert.min.js"></script>
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Pending Category Approvals</h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Shop Owner</th>
+                            <th>Shop Name</th>
+                            <th>Category Name</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Image</th>
+                            
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for category in categories %}
+                        <tr>
+                            <td>
+                                {% if category.shop_owner %}
+                                    {{ category.shop_owner.owner_name }}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if category.shop_owner %}
+                                    {{ category.shop_owner.shop_name }}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </td>
+                            <td>{{ category.category_name }}</td>
+                            <td>{{ category.description }}</td>
+                            <td>{{ category.status }}</td>
+                            
+                            <td>
+                                {% if category.category_image %}
+                                <img src="{{ category.category_image.url }}" alt="Category Image" width="80">
+                                {% else %}
+                                No Image
+                                {% endif %}
+                            </td>
+                            
+                            
+                            <td>
+                                <a href="{% url 'approve_category' category.id %}" class="btn btn-success btn-sm">Approve</a>
+                                <a href="{% url 'reject_category' category.id %}" class="btn btn-danger btn-sm">Reject</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="7" class="text-center">No pending categories</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock %}

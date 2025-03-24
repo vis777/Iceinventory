@@ -1,4 +1,4 @@
-{% extends 'adminindex.html' %}
+{% extends 'Ownerindex.html' %}
 {% block content %}
 <html lang="en">
 <head>
@@ -10,10 +10,11 @@
     <div class="card">
         <div class="card-body">
             <h4 class="card-title">Product Details</h4>
+            <a href="{% url 'ownerpage' request.user.id %}" ><button class="btn btn-back mb-3">Back to Dashboard</button></a>
 
             <div class="col-md-12">
                 <div class="card">
-                    <div class="table-responsive pt-6">
+                    <div class="table-responsive pt-6 container">
                         <table class="table table-striped project-orders-table">
                             <thead>
                                 <tr>
@@ -50,16 +51,16 @@
                                         {% endif %}
                                     </td>
                                     <td>
-                                        <div class="d-flex align-items-center">
+                                        <div class="d-flex ">
                                             <form action="{% url 'editproduct' dataid=product.id %}" method="get">
-                                                <button type="submit" class="btn btn-success btn-sm btn-icon-text mr-3">
+                                                <button type="submit" class="btn btn-success btn-icon-text mr-3">
                                                     Edit
                                                     <i class="typcn typcn-edit btn-icon-append"></i>
                                                 </button>
-                                            </form>
+                                            </form><br>
                                             <form action="{% url 'deleteproduct' dataid=product.id %}" method="post">
                                                 {% csrf_token %}
-                                                <button type="submit" class="btn btn-danger btn-sm btn-icon-text" onclick="return confirm('Are you sure you want to delete this product?');">
+                                                <button type="submit" class="btn btn-danger  btn-icon-text" onclick="return confirm('Are you sure you want to delete this product?');">
                                                     Delete
                                                     <i class="typcn typcn-delete-outline btn-icon-append"></i>
                                                 </button>

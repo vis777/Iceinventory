@@ -46,17 +46,17 @@
         <li class="nav-item">
           <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
             <i class="mdi mdi-palette menu-icon"></i>
-            <span class="menu-title">Categories</span>
+            <span class="menu-title">Approve</span>
             <i class="menu-arrow"></i>
           </a>
           <div class="collapse" id="ui-basic">
             <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link" href="{% url 'categorypage' %}">Add categories</a></li>
-              <li class="nav-item"> <a class="nav-link" href="{% url 'category_display' %}">Category details</a></li>
+              <li class="nav-item"> <a class="nav-link" href="{% url 'admin_category_approval' %}">Categories</a></li>
+              <li class="nav-item"> <a class="nav-link" href="{% url 'admin_product_approval' %}">Products</a></li>
             </ul>
           </div>
         </li>
-        <li class="nav-item">
+        {% comment %} <li class="nav-item">
           <a class="nav-link" data-toggle="collapse" href="#ui-basic1" aria-expanded="false" aria-controls="ui-basic1">
             <i class="mdi mdi-palette menu-icon"></i>
             <span class="menu-title">Products</span>
@@ -64,11 +64,11 @@
           </a>
           <div class="collapse" id="ui-basic1">
             <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link" href="{% url 'productpage' %}">Add Products</a></li>
-              <li class="nav-item"> <a class="nav-link" href="{% url 'product_display' %}">Product details</a></li>
+              <li class="nav-item"> <a class="nav-link" href="">Add Products</a></li>
+              <li class="nav-item"> <a class="nav-link" href="">Product details</a></li>
             </ul>
           </div>
-        </li>
+        </li> {% endcomment %}
         <li class="nav-item">
           <a class="nav-link" data-toggle="collapse" href="#ui-basic2" aria-expanded="false" aria-controls="ui-basic2">
             <i class="mdi mdi-palette menu-icon"></i>

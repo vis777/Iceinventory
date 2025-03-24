@@ -1,71 +1,90 @@
-{% extends 'adminindex.html' %}
+{% extends 'Ownerindex.html' %}
 {% block content %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<div class="col-12 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">Edit Product</h4>
-
-                  <form class="forms-sample" method="post" action="{% url 'updateproduct' dataid=prods.id %}" enctype="multipart/form-data">
-                    {% csrf_token %}
-                      <div class="form-group">
-                    <label for="exampleFormControlSelect2">Categories</label>
-                    <select class="form-control" id="exampleFormControlSelect2" name="categoryname">
-                      <option value="{{prods.product_category.id}}" selected>{{prods.product_category.category_name}}</option>
-                      {% for i in catdis %}
-                      <option value="{{i.id}}">{{i.category_name}}</option>
-                      {% endfor %}
-                  </select>            
-                  </div>
-                    <div class="form-group">
-                      <label for="exampleInputName1">Product Name</label>
-                      <input type="text" class="form-control" id="exampleInputName1" placeholder="Name" name="name" value="{{prods.product_name}}">
-                    </div>
-                      <div class="form-group">
-                      <label for="exampleTextarea1">Description</label>
-                      <textarea class="form-control" id="exampleTextarea1" rows="4" name="description">{{prods.description}}</textarea>
-                    </div>
-                      <div class="form-group">
-                      <label for="exampleInputPrice">Price</label>
-                      <input type="text" class="form-control" id="exampleInputPrice" placeholder="Price" name="price" value="{{prods.product_price}}">
-                    </div>
-                    <div class="form-group">
-                      <label for="exampleInputStock">Stock</label>
-                      <input type="text" class="form-control" id="exampleInputStock" placeholder="Stock" name="stock" value="{{prods.stock}}">
-                    </div>
-                    <div class="form-group">
-                      <label for="statusSelect">Status</label>
-                      <select class="form-control" id="statusSelect" name="status" required>
-                        <option value="" disabled>Select Status</option>
-                        <option value="active" {% if prods.status == 'active' %}selected{% endif %}>Active</option>
-                        <option value="inactive" {% if prods.status == 'inactive' %}selected{% endif %}>Inactive</option>
-                      </select>
-                    </div>
-                    <div class="form-group">
-                      <label>Created At:</label>
-                      <p>{{ prods.created_at|date:"Y-m-d H:i" }}</p>
-                  </div>
-                  <div class="form-group">
-                      <label>Last Updated:</label>
-                      <p>{{ prods.updated_at|date:"Y-m-d H:i" }}</p>
-                  </div>
-                    <div class="form-group">
-                         <label for="exampleInputName1">Upload Profile Image</label>
-                        <img src = "{{prods.product_image.url}}" width="100px" height="100px">
-                           <input type="file" name="image">
-                      </div>
-
-                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                    <button class="btn btn-light">Cancel</button>
-                  </form>
-                </div>
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-lg rounded-lg">
+        <div class="card-header bg-gradient-primary text-white p-4">
+          <h4 class="card-title mb-0">
+            <i class="fas fa-edit me-2"></i>Edit Product
+          </h4>
+        </div>
+        <div class="card-body p-4">
+          <form class="forms-sample" method="post" action="{% url 'updateproduct' dataid=prods.id %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="row mb-4">
+              <div class="col-md-12">
+                <label for="categorySelect" class="form-label fw-bold">Category</label>
+                <select class="form-select form-control-lg" id="categorySelect" name="categoryname">
+                  <option value="{{prods.product_category.id}}" selected>{{prods.product_category.category_name}}</option>
+                  {% for i in catdis %}
+                  <option value="{{i.id}}">{{i.category_name}}</option>
+                  {% endfor %}
+                </select>
               </div>
             </div>
-</body>
-</html>
+            
+            <div class="row mb-4">
+              <div class="col-md-12">
+                <label for="productName" class="form-label fw-bold">Product Name</label>
+                <input type="text" class="form-control form-control-lg" id="productName" name="name" value="{{prods.product_name}}" required>
+              </div>
+            </div>
+            
+            <div class="row mb-4">
+              <div class="col-md-12">
+                <label for="productDescription" class="form-label fw-bold">Description</label>
+                <textarea class="form-control" id="productDescription" rows="4" name="description">{{prods.description}}</textarea>
+              </div>
+            </div>
+            
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <label for="productPrice" class="form-label fw-bold">Price</label>
+                <input type="text" class="form-control form-control-lg" id="productPrice" name="price" value="{{prods.product_price}}">
+              </div>
+              <div class="col-md-6">
+                <label for="productStock" class="form-label fw-bold">Stock</label>
+                <input type="text" class="form-control form-control-lg" id="productStock" name="stock" value="{{prods.stock}}">
+              </div>
+            </div>
+            
+            <div class="row mb-4">
+              <div class="col-md-12">
+                <label for="statusSelect" class="form-label fw-bold">Status</label>
+                <select class="form-select form-control-lg" id="statusSelect" name="status">
+                  <option value="active" {% if prods.status == 'active' %}selected{% endif %}>Active</option>
+                  <option value="inactive" {% if prods.status == 'inactive' %}selected{% endif %}>Inactive</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="row mb-4">
+              <div class="col-md-12 text-center">
+                <div class="product-image-preview rounded p-3 bg-light mb-3">
+                  <img src="{{prods.product_image.url}}" class="img-fluid rounded" width="200px" alt="{{prods.product_name}}">
+                </div>
+                <label for="productImage" class="form-label fw-bold">Upload New Image</label>
+                <input type="file" class="form-control" id="productImage" name="image">
+                <small class="text-muted">Recommended size: 800x800 pixels</small>
+              </div>
+            </div>
+            
+            <div class="row mt-4">
+              <div class="col-12 d-flex justify-content-end">
+                <button type="button" class="btn btn-light btn-lg me-2" onclick="history.back()">
+                  <i class="fas fa-times me-1"></i>Cancel
+                </button>
+                <button type="submit" class="btn btn-primary btn-lg">
+                  <i class="fas fa-save me-1"></i>Save Changes
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

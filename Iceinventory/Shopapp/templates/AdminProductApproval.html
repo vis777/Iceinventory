@@ -1,0 +1,68 @@
+{% extends "adminindex.html" %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pending Product Approvals</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://unpkg.com/sweetalert@2.1.2/dist/sweetalert.min.js"></script>
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Pending Product Approvals</h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Shop Owner</th>
+                            <th>Shop Name</th>
+                            <th>Product Name</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Image</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td>
+                                {% if product.shop_owner %}
+                                    {{ product.shop_owner.owner_name }}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if product.shop_owner %}
+                                    {{ product.shop_owner.shop_name }}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </td>
+                            <td>{{ product.product_name }}</td>
+                            <td>{{ product.product_category.category_name }}</td>
+                            <td>{{ product.description }}</td>
+                            <td>{{ product.product_price }}</td>
+                            <td>{{ product.stock }}</td>
+                            <td><img src="{{ product.product_image.url }}" alt="Product Image" width="80"></td>
+                            <td>
+                                <a href="{% url 'approve_product' product.id %}" class="btn btn-success btn-sm">Approve</a>
+                                <a href="{% url 'reject_product' product.id %}" class="btn btn-danger btn-sm">Reject</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="7" class="text-center">No pending products</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock %}

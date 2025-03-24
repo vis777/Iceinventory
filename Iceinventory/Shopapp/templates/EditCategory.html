@@ -1,48 +1,150 @@
-{% extends 'adminindex.html' %}
+{% extends 'Ownerindex.html' %}
 {% block content %}
-<div class="card">
-    <div class="card-body">
-        <h4 class="card-title">Edit Category</h4>
-        <form class="forms-sample" method="post" action="{% url 'updatecategory' category.id %}" enctype="multipart/form-data">
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-lg rounded-lg">
+        <div class="card-header bg-gradient-primary text-white p-4">
+          <h4 class="card-title mb-0">
+            <i class="fas fa-edit me-2"></i>Edit Category
+          </h4>
+        </div>
+        <div class="card-body p-4">
+          <form class="forms-sample" method="post" action="{% url 'updatecategory' category.id %}" enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="form-group">
-                <label for="categoryName">Name</label>
-                <input type="text" class="form-control" id="categoryName" name="category_name" value="{{ category.category_name }}" required>
+            
+            <div class="row mb-4">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="categoryName" class="form-label fw-bold">Name</label>
+                  <input type="text" class="form-control form-control-lg" id="categoryName" name="category_name" value="{{ category.category_name }}" required>
+                </div>
+              </div>
             </div>
-            <div class="form-group">
-                <label for="categoryDescription">Description</label>
-                <textarea class="form-control" id="categoryDescription" rows="4" name="description">{{ category.description }}</textarea>
+            
+            <div class="row mb-4">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="categoryDescription" class="form-label fw-bold">Description</label>
+                  <textarea class="form-control" id="categoryDescription" rows="4" name="description" placeholder="Enter category description...">{{ category.description }}</textarea>
+                </div>
+              </div>
             </div>
-            <div class="form-group">
-                <label for="statusSelect">Status</label>
-                <select class="form-control" id="statusSelect" name="status" required>
+            
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="statusSelect" class="form-label fw-bold">Status</label>
+                  <select class="form-select" id="statusSelect" name="status" required>
                     <option value="active" {% if category.status == 'active' %}selected{% endif %}>Active</option>
                     <option value="inactive" {% if category.status == 'inactive' %}selected{% endif %}>Inactive</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Current Image</label>
-                <div>
-                    {% if category.category_image %}
-                        <img src="{{ category.category_image.url }}" width="100px" height="100px">
-                    {% else %}
-                        <p>No image uploaded</p>
-                    {% endif %}
+                  </select>
                 </div>
-                <label for="categoryImage">Upload New Image</label>
-                <input type="file" class="form-control-file" id="categoryImage" name="category_image">
+              </div>
             </div>
-            <div class="form-group">
-                <label>Created At:</label>
-                <p>{{ category.created_at|date:"Y-m-d H:i" }}</p>
+            
+            <div class="row mb-4">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="form-label fw-bold mb-2">Current Image</label>
+                  <div class="mb-3">
+                    {% if category.category_image %}
+                      <div class="image-preview p-2 bg-light rounded text-center">
+                        <img src="{{ category.category_image.url }}" class="img-thumbnail" style="max-height: 150px;">
+                      </div>
+                    {% else %}
+                      <div class="alert alert-light text-center">
+                        <i class="fas fa-image me-2"></i>No image uploaded
+                      </div>
+                    {% endif %}
+                  </div>
+                  <label for="categoryImage" class="form-label fw-bold">Upload New Image</label>
+                  <input type="file" class="form-control" id="categoryImage" name="category_image">
+                  <small class="text-muted">Recommended size: 300x300 pixels</small>
+                </div>
+              </div>
             </div>
-            <div class="form-group">
-                <label>Last Updated:</label>
-                <p>{{ category.updated_at|date:"Y-m-d H:i" }}</p>
+            
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label fw-bold">Created At:</label>
+                  <p class="text-muted">
+                    <i class="far fa-calendar-alt me-1"></i>
+                    {{ category.created_at|date:"Y-m-d H:i" }}
+                  </p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label fw-bold">Last Updated:</label>
+                  <p class="text-muted">
+                    <i class="far fa-clock me-1"></i>
+                    {{ category.updated_at|date:"Y-m-d H:i" }}
+                  </p>
+                </div>
+              </div>
             </div>
-            <button type="submit" class="btn btn-primary mr-2">Update</button>
-            <a href="{% url 'category_display' %}" class="btn btn-light">Cancel</a>
-        </form>
+            
+            <div class="d-flex justify-content-end mt-4">
+              <a href="{% url 'category_display' %}">
+                <button  class="btn btn-primary btn-lg me-2"><i class="fas fa-times me-1"></i>Back</button>
+              </a>
+              <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-save me-1"></i>Update
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
+
+<style>
+  .bg-gradient-primary {
+    background: linear-gradient(45deg, #3498db, #2c3e50);
+  }
+  
+  .form-control:focus, .form-select:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+  }
+  
+  .image-preview {
+    transition: all 0.3s ease;
+  }
+  
+  .image-preview:hover {
+    transform: scale(1.02);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  .card {
+    transition: all 0.3s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+  }
+  
+  .btn-primary {
+    background-color: #3498db;
+    border-color: #3498db;
+  }
+  
+  .btn-primary:hover {
+    background-color: #2980b9;
+    border-color: #2980b9;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .btn-lg {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+    }
+  }
+</style>
 {% endblock %}

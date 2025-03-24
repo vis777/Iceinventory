@@ -4,6 +4,8 @@ from Iceapp.models import Customer, ContactDb,CartDb, Checkoutdb, Order
 from django.contrib import messages
 from .forms import RegisterForm
 from django.contrib.auth import authenticate, login, logout
+from django.views.decorators.cache import never_cache, cache_control
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import AuthenticationForm
@@ -13,9 +15,13 @@ from django.http import JsonResponse
 import json
 import razorpay
 # Create your views here.
+
+@login_required(login_url='user_login')
+@never_cache
+@cache_control(no_store=True, must_revalidate=True)
 def homepage(request):
-    cat = CategoryDb.objects.all()
-    return render(request,"Home.html", {'cat':cat})
+    cat = CategoryDb.objects.filter(is_approved=True)  # Only fetch approved categories
+    return render(request, "Home.html", {'cat': cat})
 
 def user_login(request):
     """Handles user login."""
@@ -30,7 +36,7 @@ def user_login(request):
         else:
             messages.error(request, "Invalid username or password")
     
-    return render(request, "Register.html")
+    return render(request, "User_register.html")
 
 def savereg(request):
     """Handles user registration."""
@@ -45,7 +51,7 @@ def savereg(request):
         else:
             messages.error(request, "Registration failed. Please check the form.")
     
-    return render(request, "Register.html", {"form": form})
+    return render(request, "User_register.html", {"form": form})
 
 def user_logout(request):
     """Handles user logout."""
@@ -54,9 +60,9 @@ def user_logout(request):
     return redirect("indexpage")
 
 def productspage(request):
-    cat = CategoryDb.objects.all()
-    pro = ProductDb.objects.all()
-    return render(request,"Products.html",{'pro':pro, 'cat':cat})
+    cat = CategoryDb.objects.filter(is_approved=True)  # Only fetch approved categories
+    pro = ProductDb.objects.filter(is_approved=True, stock__gt=0)  # Only fetch approved products
+    return render(request, "Products.html", {'pro': pro, 'cat': cat})
 def product_filter_page(request, cat_name):
     cat = CategoryDb.objects.all()
     data = ProductDb.objects.filter(product_category__category_name=cat_name)

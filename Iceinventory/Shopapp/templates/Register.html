@@ -1,0 +1,160 @@
+<!-- Registration Form -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Owner Registration</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .registration-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        .form-label {
+            font-weight: 500;
+        }
+        .btn-register {
+            background-color: #4e73df;
+            color: white;
+            padding: 10px 25px;
+            font-weight: 500;
+        }
+        .btn-register:hover {
+            background-color: #375ad3;
+            color: white;
+        }
+        .header-text {
+            color: #4e73df;
+            border-bottom: 2px solid #e3e6f0;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        .form-text {
+            font-size: 0.85rem;
+        }
+        .image-preview {
+            width: 100%;
+            height: 200px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        .preview-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container">
+        <div class="registration-container bg-white">
+            <h2 class="text-center header-text">Shop Owner Registration</h2>
+            
+            <form method="POST" enctype="multipart/form-data" action="{% url 'register' %}">
+                {% csrf_token %}
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="ownerName" class="form-label">Owner Name</label>
+                        <input type="text" class="form-control" id="ownerName" name="owner_name" required>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                        <div class="form-text">Username must be unique and will be used for login.</div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="phone" name="phone" required>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="shopName" class="form-label">Shop Name</label>
+                        <input type="text" class="form-control" id="shopName" name="shop_name" required>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="location" class="form-label">Shop Location</label>
+                        <input type="text" class="form-control" id="location" name="location" required>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                        <div class="form-text">Password must be at least 8 characters long.</div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirm_password" required>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="shopImage" class="form-label">Shop Image</label>
+                    <input type="file" class="form-control" id="shopImage" name="shop_image" accept="image/*" required>
+                    <div class="image-preview" id="imagePreview">
+                        <span class="text-muted">Image Preview</span>
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="submit" class="btn btn-register">Register Shop</button>
+                </div>
+                
+                <div class="mt-4 text-center">
+                    <p>Already have an account? <a href="{% url 'login' %}" class="text-decoration-none">Login here</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Script for image preview -->
+    <script>
+        document.getElementById('shopImage').addEventListener('change', function(event) {
+            const imagePreview = document.getElementById('imagePreview');
+            imagePreview.innerHTML = '';
+            
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.classList.add('preview-img');
+                    imagePreview.appendChild(img);
+                }
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.innerHTML = '<span class="text-muted">Image Preview</span>';
+            }
+        });
+    </script>
+</body>
+</html>

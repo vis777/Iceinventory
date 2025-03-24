@@ -89,8 +89,9 @@
                     <div class="navbar-nav mr-auto py-0">
                         {% comment %} <a href="{% url 'admin_login' %}" class="nav-item nav-link">Admin</a> {% endcomment %}
                         <a href="{% url 'user_login' %}" class="nav-item nav-link">Login</a>
-                        {% comment %} <a href="contact.html" class="nav-item nav-link">Contact</a> {% endcomment %}
+                        <a href="{% url 'login' %}" class="nav-item nav-link">Owner</a>
                     </div> 
+                    
                 </div>
             </nav>
         </div>
@@ -108,7 +109,7 @@
                         <div class="p-3" style="max-width: 900px;">
                             <h4 class="text-white text-uppercase mb-md-3">Traditional & Delicious</h4>
                             <h1 class="display-3 text-white mb-md-4">Traditional Ice Cream Since 1950</h1>
-                            <a href="" class="btn btn-primary py-md-3 px-md-5 mt-2">Learn More</a>
+                            <a href="{% url 'login' %}" class="btn btn-primary py-md-3 px-md-5 mt-2">Shop Store</a>
                         </div>
                     </div>
                 </div>
@@ -307,7 +308,7 @@
             <div class="col-lg-4 col-md-6 p-0 portfolio-item">
                 <div class="position-relative overflow-hidden">
                     <img class="img-fluid w-100" src="{% static 'index/img/portfolio-3.jpg' %}" alt="">
-                    <a class="portfolio-btn" href="{% static 'index/img/portfolio-3.jpg' %}" data-lightbox="portfolio">
+      000              <a class="portfolio-btn" href="{% static 'index/img/portfolio-3.jpg' %}" data-lightbox="portfolio">
                         <i class="fa fa-plus text-primary" style="font-size: 60px;"></i>
                     </a>
                 </div>

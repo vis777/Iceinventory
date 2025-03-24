@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Owner Portal</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --success-color: #28a745;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-image: url("/static/images/background.jpg");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .overlay {
+            background-color: rgba(0, 0, 0, 0.7);
+            min-height: 100vh;
+            width: 100%;
+            position: fixed;
+            z-index: -1;
+        }
+        
+        header {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            background-color: var(--primary-color);
+        }
+        
+        main {
+            flex: 1;
+            padding: 2rem;
+            color: white;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            color: var(--dark-color);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .dashboard-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            color: var(--dark-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        
+        .card-subtitle {
+            font-size: 0.9rem;
+            color: #666;
+            text-align: center;
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        label {
+            font-weight: bold;
+        }
+        
+        input, textarea, select {
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        button {
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .button-secondary {
+            background-color: var(--secondary-color);
+        }
+        
+        .button-secondary:hover {
+            background-color: #1a252f;
+        }
+        
+        .button-danger {
+            background-color: var(--accent-color);
+        }
+        
+        .button-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-edit, .btn-delete, .btn-view {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-edit {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-view {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-delete {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .profile-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary-color);
+        }
+        
+        .profile-details {
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .tab.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 4px 4px 0 0;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        footer {
+            background-color: var(--secondary-color);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: auto;
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+                justify-content: center;
+            }
+            
+            main {
+                padding: 1rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+    
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            {% if user.is_authenticated %}
+                Welcome, {{ user.username }}
+            {% else %}
+                ShopOwner Portal
+            {% endif %}
+        </div>
+        {% comment %} <nav>
+            <ul>
+                <li><a href="{% url 'ownerpage' request.user.pk %}" id="dashboard-link">Dashboard</a></li>
+                <li><a href="{% url 'profile' %}" id="profile-link">Profile</a></li>
+                <li><a href="{% url 'logout' %}" id="logout-link">Logout</a></li>
+            </ul>
+        </nav> {% endcomment %}
+    </header>
+    
+    <!-- Main Content -->
+    {% block content %}
+    <main>
+        <!-- Dashboard View -->
+        <div id="dashboard-view" class="container">
+            <h1>Dashboard</h1>
+            <p>Welcome to your shop management portal. Select an option below to get started.</p>
+            
+            <div class="dashboard-grid">
+                <a href="{% url 'profile' %}" class="dashboard-card" id="profile-card">
+                    <div class="card-icon">👤</div>
+                    <div class="card-title">Profile</div>
+                    <div class="card-subtitle">View and edit your profile</div>
+                </a>
+                
+                <div class="dashboard-card" id="category-card">
+                    <a href="{% url 'categorypage' %}" class="card-link">
+                        <div class="card-icon">📁</div>
+                        <div class="card-title">Categories</div>
+                    </a>
+                    <a href="{% url 'category_display' %}" class="card-link">
+                        <div class="card-subtitle">Manage product categories</div>
+                    </a>
+                </div>
+                
+                <div class="dashboard-card" id="product-card">
+                    <a href="{% url 'productpage' %}" class="card-link">
+                        <div class="card-icon">📦</div>
+                        <div class="card-title">Products</div>
+                    </a>
+                    <a href="{% url 'product_display' %}" class="card-link">
+                        <div class="card-subtitle">Manage your products</div>
+                    </a>
+                </div>
+                <!-- Logout Card -->
+                <div class="dashboard-card " id="logout-card">
+                    <a href="{% url 'logout' %}" class="card-link">
+                        <div class="card-icon">🚪</div>
+                        <div class="card-title">Logout</div>
+                        
+                    </a>
+                    <div class="card-subtitle">Sign out of your account</div>
+                </div>
+            </div>
+        </div>
+    </main>
+    {% endblock %}
+        
+        
+    
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 ShopOwner Portal. All rights reserved.</p>
+    </footer>
+    
+    <script>
+        // DOM Elements
+        const dashboardView = document.getElementById('dashboard-view');
+        const profileView = document.getElementById('profile-view');
+        const categoriesView = document.getElementById('categories-view');
+        const categoryDetailsView = document.getElementById('category-details-view');
+        const productsView = document.getElementById('products-view');
+        const productDetailsView = document.getElementById('product-details-view');
+        
+        // Navigation Links
+        const dashboardLink = document.getElementById('dashboard-link');
+        const profileLink = document.getElementById('profile-link');
+        const logoutLink = document.getElementById('logout-link');
+        
+        // Dashboard Cards
+        const profileCard = document.getElementById('profile-card');
+        const categoryCard = document.getElementById('category-card');
+        const productCard = document.getElementById('product-card');
+        
+        // Tab Handling
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabContentId = tab.getAttribute('data-tab');
+                const tabContent = document.getElementById(tabContentId);
+                
+                // Remove active class from all tabs and contents
+                tabs.forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Add active class to clicked tab and content
+                tab.classList.add('active');
+                tabContent.classList.add('active');
+            });
+        });
+        
+        // View Handling Functions
+        function showView(viewToShow) {
+            const views = [dashboardView, profileView, categoriesView, categoryDetailsView, productsView, productDetailsView];
+            views.forEach(view => {
+                view.style.display = 'none';
+            });
+            viewToShow.style.display = 'block';
+        }
+        
+        // Navigation Event Listeners
+        dashboardLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showView(dashboardView);
+        });
+        
+        profileLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showView(profileView);
+        });
+        
+        logoutLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (confirm('Are you sure you want to logout?')) {
+                alert('Logged out successfully!');
+                // Redirect to login page or perform logout action
+            }
+        });
+        
+        // Dashboard Card Event Listeners
+        profileCard.addEventListener('click', () => {
+            showView(profileView);
+        });
+        
+        categoryCard.addEventListener('click', () => {
+            showView(categoriesView);
+        });
+        
+        productCard.addEventListener('click', () => {
+            showView(productsView);
+        });
+        
+        // Categories View Event Listeners
+        const categoryViewButtons = document.querySelectorAll('#categories-view .btn-view');
+        categoryViewButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                showView(categoryDetailsView);
+            });
+        });
+        
+        // Products View Event Listeners
+        const productViewButtons = document.querySelectorAll('#products-view .btn-view');
+        productViewButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                showView(productDetailsView);
+            });
+        });
+        
+        // Back Buttons
+        document.getElementById('back-to-categories').addEventListener('click', () => {
+            showView(categoriesView);
+        });
+        
+        document.getElementById('back-to-products').addEventListener('click', () => {
+            showView(productsView);
+        });
+        
+        // Form Submissions
+        document.getElementById('profile-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Profile updated successfully!');
+        });
+        
+        document.getElementById('category-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Category added successfully!');
+        });
+        document.getElementById('product-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Product updated successfully!');
+        });
+    </script>
+</body>
+</html>
+
+        

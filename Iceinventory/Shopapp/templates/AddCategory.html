@@ -1,32 +1,59 @@
-{% extends 'adminindex.html' %}
+{% extends 'Ownerindex.html' %}
 {% block content %}
-<div class="card">
-    <div class="card-body">
-        <h4 class="card-title">Add Category</h4>
-        <form class="forms-sample" method="post" action="{% url 'savecategory' %}" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="categoryName">Name</label>
-                <input type="text" class="form-control" id="categoryName" placeholder="Enter Category Name" name="category_name" required>
-            </div>
-            <div class="form-group">
-                <label for="categoryDescription">Description</label>
-                <textarea class="form-control" id="categoryDescription" rows="4" name="description"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="statusSelect">Status</label>
-                <select class="form-control" id="statusSelect" name="status" required>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="categoryImage">Upload Image</label>
-                <input type="file" class="form-control-file" id="categoryImage" name="category_image">
-            </div>
-            <button type="submit" class="btn btn-primary mr-2">Add Category</button>
-            <a href="{% url 'category_display' %}" class="btn btn-light">Cancel</a>
-        </form>
+<div class="container py-4">
+  <div class="card shadow-sm border-0 rounded-lg ">
+    <div class="d-flex justify-content-end">
+        <a href="{% url 'ownerpage' request.user.id %}"  ><button  class="btn btn-back ">Back</button></a>
     </div>
+    <div class="card-header bg-primary text-white">
+      <h4 class="card-title mb-0"><i class="fas fa-folder-plus me-2"></i>Add Category</h4>
+    </div>
+    
+    <div class="card-body p-4">
+      <form class="forms-sample" method="post" action="{% url 'savecategory' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="row">
+          <div class="col-md-8 mb-3">
+            <div class="form-group">
+              <label for="categoryName" class="form-label fw-bold">Name</label>
+              <input type="text" class="form-control form-control-lg" id="categoryName" placeholder="Enter Category Name" name="category_name" required>
+            </div>
+          </div>
+          
+          <div class="col-md-4 mb-3">
+            <div class="form-group">
+              <label for="statusSelect" class="form-label fw-bold">Status</label>
+              <select class="form-control form-select form-control-lg" id="statusSelect" name="status" required>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group mb-3">
+          <label for="categoryDescription" class="form-label fw-bold">Description</label>
+          <textarea class="form-control" id="categoryDescription" rows="4" name="description" placeholder="Enter category description here..."></textarea>
+        </div>
+        
+        <div class="form-group mb-4">
+          <label for="categoryImage" class="form-label fw-bold">Upload Image</label>
+          <input type="file" class="form-control" id="categoryImage" name="category_image">
+          {% comment %} <div class="form-text text-muted">Recommended size: 800x600px</div> {% endcomment %}
+        </div>
+        
+        <div class="d-flex justify-content-between mt-4">
+            
+          
+          <button type="submit" class="btn btn-primary btn-lg px-4">
+            <i class="fas fa-save me-2"></i>Add Category
+          </button>
+          
+        </div>
+      </form>
+      
+    </div>
+  </div>
 </div>
 {% endblock %}

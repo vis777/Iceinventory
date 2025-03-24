@@ -1,0 +1,219 @@
+{% extends "Ownerindex.html" %}
+
+{% block content %}
+<div class="profile-container">
+  <!-- Back Button -->
+  <div class="profile-card">
+  <a href="{% url 'ownerpage' request.user.id %}" class="btn btn-back">Back</a>
+
+    <!-- Profile image section -->
+    <div class="profile-image-container">
+      
+
+      
+      {% if shop_owner.shop_image %}
+        <img src="{{ shop_owner.shop_image.url }}" alt="Shop Image" class="profile-image">
+      {% else %}
+        <div class="placeholder-image">
+          <i class="bi bi-person-circle"></i>
+        </div>
+      {% endif %}
+    </div>
+    
+    <!-- Profile info section -->
+    <div class="profile-info">
+      <h1 class="profile-name">{{ form.shop_name.value|default:"Shop Name" }}</h1>
+      
+      <div class="info-item">
+        <span class="info-label">Email :</span>
+        <span class="info-value">{{ request.user.email }}</span>
+      </div>
+      
+      <div class="info-item">
+        <span class="info-label">Phone :</span>
+        <span class="info-value">{{ form.phone.value|default:"Not provided" }}</span>
+      </div>
+      
+      <div class="info-item">
+        <span class="info-label">Address :</span>
+        <span class="info-value">{{ form.location.value|default:"Not provided" }}</span>
+      </div>
+      
+      <div class="info-item">
+        <span class="info-label">Owner :</span>
+        <span class="info-value">{{ form.owner_name.value|default:"Not provided" }}</span>
+      </div>
+      
+      <div class="action-buttons">
+        <a href="{% url 'editprofile' %}" class="btn btn-update">UPDATE</a>
+        {% comment %} <button type="button" class="btn btn-remove" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">REMOVE</button> {% endcomment %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .profile-container {
+    background-color: #93d5e1;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+  }
+
+  .profile-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    padding: 2rem;
+    position: relative;
+  }
+
+  .profile-image-container {
+    flex: 0 0 350px;
+    margin-right: 4rem;
+    position: relative;
+  }
+
+  .profile-image {
+    width: 350px;
+    height: 350px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 10px solid white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  .placeholder-image {
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+    border: 10px solid white;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 120px;
+    color: #ccc;
+  }
+
+  .btn-back {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    background-color: #00a3a3;
+    color: white;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-back:hover {
+    background-color: #008080;
+  }
+
+  .profile-info {
+    flex: 1;
+  }
+
+  .profile-name {
+    font-size: 3rem;
+    color: #00a3a3;
+    margin-bottom: 2rem;
+    font-weight: 700;
+  }
+
+  .info-item {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+  }
+
+  .info-label {
+    color: #666;
+    font-weight: 500;
+    margin-right: 0.5rem;
+  }
+
+  .info-value {
+    color: #444;
+    font-weight: 400;
+  }
+
+  .action-buttons {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+  }
+
+  .btn {
+    padding: 0.6rem 2rem;
+    font-size: 1rem;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  .btn-update {
+    background-color: #00c3c3;
+    color: white;
+  }
+
+  .btn-remove {
+    background-color: #00c3c3;
+    color: white;
+  }
+
+  .btn-update:hover, .btn-remove:hover {
+    opacity: 0.9;
+  }
+
+  @media (max-width: 992px) {
+    .profile-card {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .profile-image-container {
+      margin-right: 0;
+      margin-bottom: 2rem;
+    }
+    
+    .action-buttons {
+      justify-content: center;
+    }
+
+    .btn-back {
+      top: 10px;
+      left: 10px;
+      font-size: 0.9rem;
+      padding: 0.4rem 0.8rem;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .profile-image, .placeholder-image {
+      width: 250px;
+      height: 250px;
+    }
+
+    .profile-name {
+      font-size: 2rem;
+    }
+
+    .info-item {
+      font-size: 1rem;
+    }
+  }
+</style>
+{% endblock %}
